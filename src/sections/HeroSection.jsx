@@ -1,0 +1,67 @@
+import React, { useState, useEffect } from 'react';
+import { Button } from '../components/Button';
+import { ArrowRight } from 'lucide-react';
+
+export function HeroSection() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  const images = [
+    '/src/assets/casona11.jpeg',
+    '/src/assets/casona8.jpeg',
+    '/src/assets/casona16.jpeg',
+    '/src/assets/casona24.jpeg'
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 5000); // Change image every 5 seconds
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  return (
+    <section className="relative min-h-[90vh] flex items-center justify-center bg-background overflow-hidden">
+      {/* Background Image Carousel */}
+      <div className="absolute inset-0 z-0">
+        {images.map((src, index) => (
+          <div
+            key={src}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === currentImageIndex ? 'opacity-40' : 'opacity-0'
+            }`}
+          >
+            <img 
+              src={src} 
+              alt={`Fondo de Casona ${index + 1}`} 
+              className="w-full h-full object-cover"
+            />
+          </div>
+        ))}
+        {/* Gradient overlays to ensure text readability */}
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/60 to-background"></div>
+      </div>
+
+      {/* Background Radial Glow */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <div className="w-[800px] h-[800px] bg-primary/20 rounded-full blur-[150px] opacity-70"></div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 max-w-[1200px] mx-auto px-6 md:px-16 text-center pt-20">
+        <h1 className="font-playfair text-5xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
+          Tus Eventos. Tu Momento
+        </h1>
+        <p className="font-jakarta text-lg text-on-surface-variant max-w-2xl mx-auto mb-10">
+          Planifica tu evento de inicio a fin. Desde el espacio perfecto hasta los detalles más exquisitos.
+          Nos encargamos de todo para que disfrutes tu noche de lujo sin preocupaciones.
+        </p>
+        
+        <div className="flex items-center justify-center">
+          <Button variant="primary" className="flex items-center gap-2 pr-4">
+            Comenzar <ArrowRight size={18} />
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
