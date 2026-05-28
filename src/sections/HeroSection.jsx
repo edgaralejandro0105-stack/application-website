@@ -16,12 +16,12 @@ export function HeroSection() {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 5000); // Change image every 5 seconds
+    }, 3000); // Change image every 3 seconds
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center bg-background overflow-hidden">
+    <section className="relative h-screen flex items-center justify-center bg-background overflow-hidden">
       {/* Background Image Carousel */}
       <div className="absolute inset-0 z-0">
         {images.map((src, index) => (

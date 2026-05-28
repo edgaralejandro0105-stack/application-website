@@ -19,7 +19,7 @@ export function PlannerSection() {
       'Robots LED': false,
       'Show de Luces y Pantallas': false,
       'DJ': false,
-      'Show de Cotillón': false
+      'Show de disfrases': false
     },
     personal: {
       'Mesoneros': 0,
@@ -38,15 +38,15 @@ export function PlannerSection() {
   // Lógica de Precios del Prototipo (Se pueden editar fácilmente luego)
   useEffect(() => {
     let total = 0;
-    if (formData.salon === 'Salón') total += 500;
-    if (formData.salon === 'Terraza') total += 300;
-    if (formData.salon === 'Ambos') total += 750;
+    if (formData.salon === 'Salón') total += 150;
+    if (formData.salon === 'Terraza') total += 100;
+    if (formData.salon === 'Ambos') total += 350;
 
-    if (formData.servicios['Show de garotas']) total += 100;
+    if (formData.servicios['Show de garotas']) total += 200;
     if (formData.servicios['Robots LED']) total += 150;
-    if (formData.servicios['Show de Luces y Pantallas']) total += 200;
-    if (formData.servicios['DJ']) total += 120;
-    if (formData.servicios['Show de Cotillón']) total += 80;
+    if (formData.servicios['Show de Luces y Pantallas']) total += 100;
+    if (formData.servicios['DJ']) total += 30;
+    if (formData.servicios['Show de disfraces']) total += 80;
 
     total += (parseInt(formData.personal['Mesoneros']) || 0) * 20;
     total += (parseInt(formData.personal['Barman']) || 0) * 30;
@@ -214,9 +214,9 @@ export function PlannerSection() {
                                 type="checkbox" 
                                 checked={formData.servicios[item]}
                                 onChange={() => handleServiceChange(item)}
-                                className="peer sr-only" />
-                              <div className="w-4 h-4 rounded-full border border-outline flex items-center justify-center peer-checked:border-primary">
-                                <div className="w-2 h-2 rounded-full bg-transparent peer-checked:bg-primary"></div>
+                                className="sr-only" />
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${formData.servicios[item] ? 'border-primary' : 'border-outline'}`}>
+                                <div className={`w-2 h-2 rounded-full transition-colors ${formData.servicios[item] ? 'bg-primary' : 'bg-transparent'}`}></div>
                               </div>
                               <span className="text-sm font-jakarta text-on-surface-variant">{item}</span>
                             </label>
@@ -227,15 +227,15 @@ export function PlannerSection() {
                       <div>
                         <div className="h-4 mb-4"></div> {/* Spacer for alignment */}
                         <div className="flex flex-col gap-3">
-                          {['DJ', 'Show de Cotillón'].map(item => (
+                          {['DJ', 'Show de disfrases'].map(item => (
                             <label key={item} className="flex items-center gap-3 cursor-pointer group">
                               <input 
                                 type="checkbox" 
                                 checked={formData.servicios[item]}
                                 onChange={() => handleServiceChange(item)}
-                                className="peer sr-only" />
-                              <div className="w-4 h-4 rounded-full border border-outline flex items-center justify-center peer-checked:border-primary">
-                                <div className="w-2 h-2 rounded-full bg-transparent peer-checked:bg-primary"></div>
+                                className="sr-only" />
+                              <div className={`w-4 h-4 rounded-full border flex items-center justify-center transition-colors ${formData.servicios[item] ? 'border-primary' : 'border-outline'}`}>
+                                <div className={`w-2 h-2 rounded-full transition-colors ${formData.servicios[item] ? 'bg-primary' : 'bg-transparent'}`}></div>
                               </div>
                               <span className="text-sm font-jakarta text-on-surface-variant">{item}</span>
                             </label>
