@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function ServicesSection() {
   const scrollRef = useRef(null);
@@ -40,11 +41,21 @@ export function ServicesSection() {
     <section id="servicios" className="py-16 bg-background relative z-10">
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">
         <div className="flex items-end justify-between mb-10">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
+          >
             <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-2 uppercase tracking-wide">Servicios que Ofrecemos</h2>
             <p className="font-jakarta text-on-surface-variant text-sm">Entretenimiento garantizado para tu evento.</p>
-          </div>
-          <div className="flex gap-2">
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
+            className="flex gap-2">
             <button 
               onClick={() => scroll('left')}
               className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-on-surface hover:bg-surface-variant transition-colors"
@@ -57,11 +68,15 @@ export function ServicesSection() {
             >
               <ChevronRight size={20} />
             </button>
-          </div>
+          </motion.div>
         </div>
 
-        <div 
+        <motion.div 
           ref={scrollRef}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
@@ -76,7 +91,7 @@ export function ServicesSection() {
               </div>
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

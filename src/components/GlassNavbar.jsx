@@ -36,7 +36,14 @@ export function GlassNavbar() {
           ))}
         </div>
 
-        <Button variant="primary" className="hidden md:inline-flex">
+        <Button 
+          variant="primary" 
+          className="hidden md:inline-flex"
+          onClick={() => {
+            const el = document.getElementById('planificador');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          }}
+        >
           Reserva
         </Button>
       </div>

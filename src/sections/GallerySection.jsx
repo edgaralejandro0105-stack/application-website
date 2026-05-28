@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function GallerySection() {
   const scrollRef = useRef(null);
@@ -44,11 +45,21 @@ export function GallerySection() {
     <section id="galeria" className="py-16 bg-background relative z-10">
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">
         <div className="flex items-end justify-between mb-8">
-          <div>
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
+          >
             <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-2 uppercase tracking-wide">Galería de Eventos</h2>
             <p className="font-jakarta text-on-surface-variant text-sm">Momentos inolvidables capturados en La Casona.</p>
-          </div>
-          <div className="flex gap-2">
+          </motion.div>
+          <motion.div 
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{ duration: 0.6 }}
+            className="flex gap-2">
             <button 
               onClick={() => scroll('left')}
               className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-on-surface hover:bg-surface-variant transition-colors"
@@ -61,11 +72,15 @@ export function GallerySection() {
             >
               <ChevronRight size={20} />
             </button>
-          </div>
+          </motion.div>
         </div>
 
-        <div 
+        <motion.div 
           ref={scrollRef}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
+          transition={{ duration: 0.8, delay: 0.2 }}
           className="flex gap-6 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
@@ -77,7 +92,7 @@ export function GallerySection() {
               <img src={img.src} alt="Galería" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );

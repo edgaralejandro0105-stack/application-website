@@ -1,16 +1,72 @@
-# React + Vite
+# La Casona - Aplicación y Sitio Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este es el repositorio del sitio web y aplicación para **La Casona**, un proyecto moderno construido con [React](https://reactjs.org/) y [Vite](https://vitejs.dev/), diseñado para ofrecer una experiencia de usuario fluida, dinámica y altamente atractiva.
 
-Currently, two official plugins are available:
+## 🚀 Características Principales
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+El proyecto está dividido en componentes modulares, permitiendo una fácil escalabilidad y mantenimiento:
 
-## React Compiler
+- **Sección Hero (Inicio)**: La primera impresión visual del sitio web con llamadas a la acción (CTAs).
+- **Áreas**: Información detallada sobre los distintos espacios disponibles en La Casona.
+- **Productos & Servicios**: Catálogo de productos y servicios ofrecidos.
+- **Galería**: Muestra visual de eventos, instalaciones y experiencias.
+- **Planificador de Eventos (Planner)**: Interfaz diseñada para ayudar a los usuarios a planificar y organizar eventos.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠 Tecnologías Utilizadas
 
-## Expanding the ESLint configuration
+- **Framework**: React 19
+- **Bundler**: Vite
+- **Estilos**: Tailwind CSS
+- **Iconografía**: Lucide React
+- **Linter**: ESLint
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📁 Estructura del Proyecto
+
+El código fuente se encuentra organizado dentro de la carpeta `src/`:
+
+```plaintext
+src/
+├── assets/         # Imágenes, iconos y otros archivos estáticos.
+├── components/     # Componentes reutilizables de UI (Botones, Tarjetas, Footer, Navbar).
+├── sections/       # Secciones principales de la página (Hero, Áreas, Galería, etc.).
+├── App.jsx         # Componente principal que unifica todas las secciones.
+├── main.jsx        # Punto de entrada de la aplicación React.
+└── index.css       # Estilos globales y configuración de Tailwind CSS.
+```
+
+## ⚙️ Instalación y Ejecución
+
+Sigue estos pasos para ejecutar el proyecto en tu entorno local:
+
+1. **Clonar el repositorio:**
+   ```bash
+   git clone <URL_DEL_REPOSITORIO>
+   cd application-website
+   ```
+
+2. **Instalar las dependencias:**
+   Asegúrate de tener Node.js instalado, luego ejecuta:
+   ```bash
+   npm install
+   ```
+
+3. **Iniciar el servidor de desarrollo:**
+   ```bash
+   npm run dev
+   ```
+   Esto levantará el proyecto localmente (generalmente en `http://localhost:5173/`).
+
+4. **Construir para producción:**
+   ```bash
+   npm run build
+   ```
+   Los archivos optimizados para producción se generarán en la carpeta `dist/`.
+
+## 📜 Scripts Disponibles
+
+En el directorio del proyecto, puedes ejecutar los siguientes comandos:
+
+- `npm run dev`: Inicia el servidor de desarrollo Vite.
+- `npm run build`: Construye la aplicación para producción.
+- `npm run preview`: Sirve la carpeta construida de forma local para probar la versión de producción.
+- `npm run lint`: Ejecuta el linter (ESLint) para verificar problemas en el código.

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../components/Button';
 import { ArrowRight } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -48,19 +49,38 @@ export function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 max-w-[1200px] mx-auto px-6 md:px-16 text-center pt-20">
-        <h1 className="font-playfair text-5xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
+        <motion.h1 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="font-playfair text-5xl md:text-7xl font-bold text-white leading-tight mb-6 tracking-tight">
           Tus Eventos. Tu Momento
-        </h1>
-        <p className="font-jakarta text-lg text-on-surface-variant max-w-2xl mx-auto mb-10">
+        </motion.h1>
+        <motion.p 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="font-jakarta text-lg text-on-surface-variant max-w-2xl mx-auto mb-10">
           Planifica tu evento de inicio a fin. Desde el espacio perfecto hasta los detalles más exquisitos.
           Nos encargamos de todo para que disfrutes tu noche de lujo sin preocupaciones.
-        </p>
+        </motion.p>
         
-        <div className="flex items-center justify-center">
-          <Button variant="primary" className="flex items-center gap-2 pr-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="flex items-center justify-center">
+          <Button 
+            variant="primary" 
+            className="flex items-center gap-2 pr-4"
+            onClick={() => {
+              const el = document.getElementById('zonas');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
             Comenzar <ArrowRight size={18} />
           </Button>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
