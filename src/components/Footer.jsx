@@ -1,6 +1,14 @@
 import React from 'react';
 import { Phone, Mail, MapPin, Clock, User } from 'lucide-react';
 
+const SOCIAL_LINKS = {
+  facebook:  "https://www.facebook.com/lacasona.fiestas",                                      
+  instagram: "https://www.instagram.com/lacasonadisco?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==",
+  twitter:   "https://x.com/AlejoRivas0105",                                    
+  youtube:   "https://youtu.be/V3lEkZEuLMU?si=OrQLrCFHu090UW9b",                                     
+  tiktok:    "https://www.tiktok.com/@morkshop?_r=1&_t=ZS-96j6NyGaujX",                                     
+};
+
 export function Footer() {
   return (
     <footer className="bg-surface-container-lowest py-12 border-t border-white/5 mt-auto text-on-surface">
@@ -23,7 +31,7 @@ export function Footer() {
                 <Phone size={18} className="text-primary group-hover:text-primary-container transition-colors shrink-0" />
                 <span>+58 414-759-3330</span>
               </a>
-              <a href="mailto:infobebidastipicasve@gmail.com" className="flex items-center gap-3 hover:text-primary transition-colors group">
+              <a href="mailto:lacasonadisco@gmail.com" className="flex items-center gap-3 hover:text-primary transition-colors group">
                 <Mail size={18} className="text-primary group-hover:text-primary-container transition-colors shrink-0" />
                 <span>lacasonadisco@gmail.com</span>
               </a>
@@ -42,21 +50,31 @@ export function Footer() {
               Síguenos
             </h3>
             <div className="flex flex-wrap justify-center gap-4 mt-2">
-              <a href="#" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
-                <FacebookIcon size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
-                <InstagramIcon size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
-                <TwitterIcon size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
-                <YoutubeIcon size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
-                <TikTokIcon size={18} />
-              </a>
+              {SOCIAL_LINKS.facebook && (
+                <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
+                  <FacebookIcon size={18} />
+                </a>
+              )}
+              {SOCIAL_LINKS.instagram && (
+                <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
+                  <InstagramIcon size={18} />
+                </a>
+              )}
+              {SOCIAL_LINKS.twitter && (
+                <a href={SOCIAL_LINKS.twitter} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
+                  <TwitterIcon size={18} />
+                </a>
+              )}
+              {SOCIAL_LINKS.youtube && (
+                <a href={SOCIAL_LINKS.youtube} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
+                  <YoutubeIcon size={18} />
+                </a>
+              )}
+              {SOCIAL_LINKS.tiktok && (
+                <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary hover:bg-primary/5 transition-all">
+                  <TikTokIcon size={18} />
+                </a>
+              )}
             </div>
           </div>
 
@@ -110,7 +128,7 @@ const FacebookIcon = ({ size = 24, className = "" }) => (
 );
 
 const InstagramIcon = ({ size = 24, className = "" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+  <svg xmlns="https://www.instagram.com/lacasonadisco?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
     <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
