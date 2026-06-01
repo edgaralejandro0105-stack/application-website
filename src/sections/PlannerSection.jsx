@@ -8,9 +8,9 @@ export function PlannerSection() {
   const [step, setStep] = useState(1); // 1: Cotizador, 2: Contacto, 3: Success
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     salon: 'Salón',
-    horario: 'Noche (20:00 - 03:00)',
+    horario: '20:00-03:00',
     fecha: '',
     tipo: 'Bodas',
     descripcion: '',
@@ -31,7 +31,9 @@ export function PlannerSection() {
       telefono: '',
       correo: ''
     }
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
 
   const [precioEstimado, setPrecioEstimado] = useState(0);
 
@@ -75,16 +77,32 @@ export function PlannerSection() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (step === 1) {
       setStep(2);
     } else if (step === 2) {
       setIsSubmitting(true);
-      setTimeout(() => {
+      try {
+        const response = await fetch('http://localhost:3000/api/events/website', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        });
+
+        if (response.ok) {
+          setStep(3);
+        } else {
+          console.error('Error al crear la pre-reserva');
+          // Aquí podríamos mostrar un mensaje de error si fuera necesario
+        }
+      } catch (error) {
+        console.error('Error de red al crear la pre-reserva', error);
+      } finally {
         setIsSubmitting(false);
-        setStep(3);
-      }, 1500);
+      }
     }
   };
 
@@ -124,7 +142,7 @@ export function PlannerSection() {
                 <p className="font-jakarta text-on-surface-variant max-w-md mx-auto mb-8 leading-relaxed">
                   Tu solicitud ha sido enviada correctamente. Un miembro de nuestro equipo se pondrá en contacto contigo a la brevedad para confirmar los detalles.
                 </p>
-                <Button variant="outline" onClick={() => { setStep(1); setPrecioEstimado(0); }}>Nueva Solicitud</Button>
+                <Button variant="outline" onClick={() => { setStep(1); setFormData(initialFormState); setPrecioEstimado(0); }}>Nueva Solicitud</Button>
               </div>
             ) : (
               <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
@@ -155,8 +173,8 @@ export function PlannerSection() {
                             value={formData.horario} 
                             onChange={(e) => setFormData({...formData, horario: e.target.value})}
                             className="w-full appearance-none bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary">
-                            <option>Noche (20:00 - 03:00)</option>
-                            <option>Tarde (14:00 - 21:00)</option>
+                            <option value="20:00-03:00">Noche (20:00 - 03:00)</option>
+                            <option value="14:00-21:00">Tarde (14:00 - 21:00)</option>
                           </select>
                           <ChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-outline" size={18} />
                         </div>
@@ -302,15 +320,15 @@ export function PlannerSection() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="flex flex-col gap-2">
                         <label className="text-label-md text-on-surface-variant uppercase tracking-[0.05em]">Nombre Completo *</label>
-                        <input type="text" required placeholder="Ej: Juan Pérez" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant" />
+                        <input type="text" required value={formData.contacto.nombre} onChange={e => setFormData({...formData, contacto: {...formData.contacto, nombre: e.target.value}})} placeholder="Ej: Juan Pérez" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant" />
                       </div>
                       <div className="flex flex-col gap-2">
                         <label className="text-label-md text-on-surface-variant uppercase tracking-[0.05em]">Teléfono (WhatsApp) *</label>
-                        <input type="tel" required placeholder="Ej: +58 414 1234567" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant" />
+                        <input type="tel" required value={formData.contacto.telefono} onChange={e => setFormData({...formData, contacto: {...formData.contacto, telefono: e.target.value}})} placeholder="Ej: +58 414 1234567" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant" />
                       </div>
                       <div className="flex flex-col gap-2 md:col-span-2">
                         <label className="text-label-md text-on-surface-variant uppercase tracking-[0.05em]">Correo Electrónico *</label>
-                        <input type="email" required placeholder="ejemplo@correo.com" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant" />
+                        <input type="email" required value={formData.contacto.correo} onChange={e => setFormData({...formData, contacto: {...formData.contacto, correo: e.target.value}})} placeholder="ejemplo@correo.com" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant" />
                       </div>
                     </div>
                   </motion.div>
