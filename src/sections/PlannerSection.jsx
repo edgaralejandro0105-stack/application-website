@@ -531,7 +531,7 @@ export function PlannerSection() {
                                     <div className={`w-2 h-2 rounded-full transition-colors ${formData.servicios[name] ? 'bg-primary' : 'bg-transparent'}`}></div>
                                   </div>
                                   <span className="text-sm font-jakarta text-on-surface-variant flex items-center gap-2">
-                                    {name} <span className="text-xs text-primary/70">${parseFloat(service.base_price || 0).toFixed(2)}</span>
+                                    {service.name ? `${service.name} (${service.service_type})` : service.service_type} <span className="text-xs text-primary/70">${parseFloat(service.base_price || 0).toFixed(2)}</span>
                                   </span>
                                 </label>
                               );
@@ -558,7 +558,7 @@ export function PlannerSection() {
                                   <div className={`w-2 h-2 rounded-full transition-colors ${formData.servicios[name] ? 'bg-primary' : 'bg-transparent'}`}></div>
                                 </div>
                                 <span className="text-sm font-jakarta text-on-surface-variant flex items-center gap-2">
-                                    {name} <span className="text-xs text-primary/70">${parseFloat(service.base_price || 0).toFixed(2)}</span>
+                                    {service.name ? `${service.name} (${service.service_type})` : service.service_type} <span className="text-xs text-primary/70">${parseFloat(service.base_price || 0).toFixed(2)}</span>
                                 </span>
                               </label>
                             );
