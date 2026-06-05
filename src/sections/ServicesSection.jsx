@@ -8,13 +8,13 @@ export function ServicesSection() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchServices = async () => {
       try {
         const response = await getServices();
         const data = response.data || response;
-        // Solo mostramos los servicios activos
         const activeServices = data.filter(service => service.is_active);
         setServices(activeServices);
       } catch (err) {
@@ -35,7 +35,7 @@ export function ServicesSection() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (scrollRef.current && !loading && services.length > 0) {
+      if (scrollRef.current && !loading && services.length > 0 && !isHovered) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
         if (scrollLeft + clientWidth >= scrollWidth - 10) {
           scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
@@ -45,7 +45,7 @@ export function ServicesSection() {
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, [loading, services]);
+  }, [loading, services, isHovered]);
 
   return (
     <section id="servicios" className="py-16 bg-background relative z-10">
@@ -89,6 +89,8 @@ export function ServicesSection() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
           {loading ? (
              Array.from({ length: 5 }).map((_, i) => (
@@ -112,7 +114,7 @@ export function ServicesSection() {
                 
                 <div className="absolute inset-0 flex flex-col justify-end p-4 text-center transform transition-transform duration-300 translate-y-4 group-hover:translate-y-0">
                   <span className="font-jakarta font-bold text-white bg-surface/50 backdrop-blur-md px-4 py-1.5 rounded-full text-xs inline-block mx-auto border border-white/10 mb-2 transition-transform duration-300 group-hover:-translate-y-2">
-                    {service.service_type}
+                    {service.name ? `${service.name} (${service.service_type})` : service.service_type}
                   </span>
                   
                   {/* Info extra revelada al hacer hover */}
