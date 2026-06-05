@@ -74,7 +74,7 @@ export function GlassNavbar() {
 
         {/* Botón Hamburger Mobile */}
         <button 
-          className="lg:hidden text-white p-2" 
+          className="lg:hidden text-white p-2 -translate-y-2" 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           aria-label="Abrir menú"
         >
