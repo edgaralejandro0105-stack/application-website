@@ -36,16 +36,29 @@ export function GlassNavbar() {
           ))}
         </div>
 
-        <Button 
-          variant="primary" 
-          className="hidden md:inline-flex"
-          onClick={() => {
-            const el = document.getElementById('planificador');
-            if (el) el.scrollIntoView({ behavior: 'smooth' });
-          }}
-        >
-          Reserva
-        </Button>
+        <div className="flex items-center gap-6">
+          <button 
+            onClick={(e) => {
+              e.preventDefault();
+              window.dispatchEvent(new Event('open-consulta'));
+            }} 
+            className="hidden lg:block text-xs font-medium text-on-surface-variant hover:text-primary transition-colors underline-offset-4 hover:underline"
+          >
+            ¿Ya agendaste? Consulta aquí
+          </button>
+          
+          <Button 
+            variant="primary" 
+            className="hidden md:inline-flex"
+            onClick={() => {
+              const el = document.getElementById('planificador');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+              window.dispatchEvent(new Event('open-reserva'));
+            }}
+          >
+            Reserva
+          </Button>
+        </div>
       </div>
     </nav>
   );

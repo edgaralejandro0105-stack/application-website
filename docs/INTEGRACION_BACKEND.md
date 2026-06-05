@@ -85,3 +85,46 @@ Dado que el cliente es fundamental para que el `Event` se inserte, el servicio w
 1. **Reconocimiento por Teléfono:** Se asume que el teléfono móvil sirve como clave secundaria de identidad en reservas iniciales.
 2. **Auto-registro:** Si el cliente nunca se ha registrado, el backend descompone su "Nombre Completo" en `name` y `last_name` mediante manipulación de strings.
 3. **Generación de ID Documental:** Para cumplir con la restricción `NOT NULL` de la columna de cédula/documento (`doc_id`), se autogenera un identificador transitorio: `WEB-` concatenado con una estampa temporal (Ej: `WEB-854132`). El administrador luego puede actualizarlo.
+
+---
+
+## 5. Consulta de Pre-reserva por Correo Electrónico (Nueva Funcionalidad)
+
+Para permitir que el cliente consulte el estado de su pre-reserva de manera autónoma sin necesidad de contactar directamente a administración en primera instancia, se ha habilitado un flujo de consulta directa desde la web.
+
+### 5.1. Flujo de Datos
+1. **Cliente Web:** Ingresa su correo electrónico en la pestaña de "Consultar Estado" en el Planificador del sitio web (`application-website`).
+2. **Petición API:** El frontend realiza una petición asíncrona `GET /api/events/website/status?email=<correo_cliente>`.
+3. **Servicio Backend:** 
+   - Limpia el parámetro del correo (normaliza a minúsculas y elimina espacios extras).
+   - Busca al cliente por su correo en la tabla `clients`.
+   - Si no lo encuentra, retorna un JSON `{ client: null, events: [] }` con estado 200 OK (esto previene exponer si un correo existe o no).
+   - Si lo encuentra, recupera todos los eventos asociados con su `client_id` (incluyendo el nombre del salón mapeado desde la tabla `venues`).
+4. **Respuesta y Formateo:** Retorna un objeto con la información simplificada y filtrada para proteger los datos internos de la empresa.
+5. **UI en el Cliente:** Muestra un saludo personalizado con el nombre del cliente y un listado de sus pre-reservas con su tipo, salón, fecha (corrigiendo la zona horaria UTC a local para evitar saltos de día) y badges de estado coloreados según corresponda.
+
+### 5.2. Especificación del Endpoint de Consulta
+* **Método:** `GET`
+* **Ruta:** `/api/events/website/status`
+* **Query Params:**
+  * `email` (String, obligatorio): El correo electrónico del cliente.
+* **Ejemplo de Respuesta Exitosa (200 OK):**
+  ```json
+  {
+    "client": {
+      "name": "Juan",
+      "last_name": "Pérez"
+    },
+    "events": [
+      {
+        "event_id": 42,
+        "start_date": "2026-06-04T20:00:00.000Z",
+        "end_date": "2026-06-05T03:00:00.000Z",
+        "type_event": "Bodas",
+        "status": "Pending",
+        "venue": "Salón Principal"
+      }
+    ]
+  }
+  ```
+

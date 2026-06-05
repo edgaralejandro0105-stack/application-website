@@ -1,20 +1,30 @@
-import React, { useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getServices } from '../services/api';
 
 export function ServicesSection() {
   const scrollRef = useRef(null);
+  const [services, setServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const services = [
-    { id: 1, title: 'Show de Garotas', image: '/src/assets/garota.jpeg' },
-    { id: 2, title: 'DJ Profesional', image: '/src/assets/dj.jpg' },
-    { id: 3, title: 'Robots LED', image: '/src/assets/robot.jpeg' },
-    { id: 4, title: 'Cantantes en Vivo', image: '/src/assets/cantante.png' },
-    { id: 5, title: 'Show de Luces y Pantallas', image: '/src/assets/miniteca.png' },
-    { id: 6, title: 'Chefs profesionales', image: '/src/assets/chef.webp' },
-    { id: 7, title: 'Decoración Temática', image: '/src/assets/casona7.jpeg' },
-    { id: 8, title: 'Show de disfraces', image: '/src/assets/disfraz.png' }
-  ];
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await getServices();
+        const data = response.data || response;
+        // Solo mostramos los servicios activos
+        const activeServices = data.filter(service => service.is_active);
+        setServices(activeServices);
+      } catch (err) {
+        setError('No se pudieron cargar los servicios');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchServices();
+  }, []);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -25,7 +35,7 @@ export function ServicesSection() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (scrollRef.current) {
+      if (scrollRef.current && !loading && services.length > 0) {
         const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
         if (scrollLeft + clientWidth >= scrollWidth - 10) {
           scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
@@ -35,7 +45,7 @@ export function ServicesSection() {
       }
     }, 3000);
     return () => clearInterval(interval);
-  }, []);
+  }, [loading, services]);
 
   return (
     <section id="servicios" className="py-16 bg-background relative z-10">
@@ -80,17 +90,48 @@ export function ServicesSection() {
           className="flex gap-4 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {services.map(service => (
-            <div key={service.id} className="min-w-[200px] md:min-w-[240px] h-56 relative rounded-xl overflow-hidden group cursor-pointer border border-white/5 snap-start shrink-0">
-              <img src={service.image} alt={service.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
-              <div className="absolute bottom-6 left-0 right-0 text-center">
-                <span className="font-jakarta font-bold text-white bg-surface/50 backdrop-blur-md px-4 py-1.5 rounded-full text-xs inline-block border border-white/10">
-                  {service.title}
-                </span>
+          {loading ? (
+             Array.from({ length: 5 }).map((_, i) => (
+               <div key={i} className="min-w-[200px] md:min-w-[240px] h-56 rounded-xl border border-white/5 bg-surface-variant/30 animate-pulse shrink-0 flex items-center justify-center">
+                 <Loader2 className="animate-spin text-white/20" size={32} />
+               </div>
+             ))
+          ) : error ? (
+             <div className="w-full text-center py-10 text-error font-jakarta">
+               {error}
+             </div>
+          ) : services.length === 0 ? (
+             <div className="w-full text-center py-10 text-on-surface-variant font-jakarta">
+               No hay servicios disponibles por ahora.
+             </div>
+          ) : (
+            services.map(service => (
+              <div key={service.service_id} className="min-w-[200px] md:min-w-[240px] h-56 relative rounded-xl overflow-hidden group cursor-pointer border border-white/5 snap-start shrink-0">
+                <img src={service.image_url || '/src/assets/dj.jpg'} alt={service.name || service.service_type} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent"></div>
+                
+                <div className="absolute inset-0 flex flex-col justify-end p-4 text-center transform transition-transform duration-300 translate-y-4 group-hover:translate-y-0">
+                  <span className="font-jakarta font-bold text-white bg-surface/50 backdrop-blur-md px-4 py-1.5 rounded-full text-xs inline-block mx-auto border border-white/10 mb-2 transition-transform duration-300 group-hover:-translate-y-2">
+                    {service.name || service.service_type}
+                  </span>
+                  
+                  {/* Info extra revelada al hacer hover */}
+                  <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 h-0 group-hover:h-auto">
+                    {service.base_price && parseFloat(service.base_price) > 0 && (
+                      <p className="text-primary font-jakarta text-xs font-semibold mb-1">
+                        Desde ${parseFloat(service.base_price).toFixed(2)}
+                      </p>
+                    )}
+                    {service.description && (
+                      <p className="text-white/80 font-jakarta text-[10px] line-clamp-2">
+                        {service.description}
+                      </p>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          )}
         </motion.div>
       </div>
     </section>

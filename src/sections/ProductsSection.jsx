@@ -1,20 +1,30 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { Card } from '../components/Card';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getProducts } from '../services/api';
 
 export function ProductsSection() {
   const scrollRef = useRef(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const products = [
-    { id: 1, title: 'Cócteles', image: '/src/assets/coctel.png' },
-    { id: 2, title: 'Somos destiladores', image: '/src/assets/cocteles.png' },
-    { id: 3, title: 'Licores nacionales', image: '/src/assets/nacionales.webp' },
-    { id: 4, title: 'Cenas Exclusivas', image: '/src/assets/cena.jpg' },
-    { id: 5, title: 'Licores Premium', image: '/src/assets/importado.jpg' },
-    { id: 6, title: 'Snacks y Tapas', image: '/src/assets/snack.webp' },
-    { id: 7, title: 'Degustaciones', image: '/src/assets/vino.jpg' }
-  ];
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await getProducts();
+        // Asume que la API devuelve un array directamente o un objeto con data
+        const data = response.data || response;
+        setProducts(data);
+      } catch (err) {
+        setError('No se pudieron cargar los productos');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -80,17 +90,33 @@ export function ProductsSection() {
           className="flex gap-6 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {products.map(product => (
-            <div key={product.id} className="min-w-[280px] md:min-w-[320px] h-64 relative rounded-xl overflow-hidden group cursor-pointer border border-white/5 snap-start shrink-0">
-              <img src={product.image} alt={product.title} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
-              <div className="absolute bottom-6 left-0 right-0 text-center">
-                <span className="font-jakarta font-bold text-white bg-surface/50 backdrop-blur-md px-6 py-2 rounded-full text-sm inline-block border border-white/10">
-                  {product.title}
-                </span>
+          {loading ? (
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="min-w-[280px] md:min-w-[320px] h-64 rounded-xl border border-white/5 bg-surface-variant/30 animate-pulse shrink-0 flex items-center justify-center">
+                <Loader2 className="animate-spin text-white/20" size={32} />
               </div>
+            ))
+          ) : error ? (
+            <div className="w-full text-center py-10 text-error font-jakarta">
+              {error}
             </div>
-          ))}
+          ) : products.length === 0 ? (
+            <div className="w-full text-center py-10 text-on-surface-variant font-jakarta">
+              No hay productos disponibles por el momento.
+            </div>
+          ) : (
+            products.map(product => (
+              <div key={product.product_id} className="min-w-[280px] md:min-w-[320px] h-64 relative rounded-xl overflow-hidden group cursor-pointer border border-white/5 snap-start shrink-0">
+                <img src={product.image_url || '/src/assets/coctel.png'} alt={product.name} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
+                <div className="absolute bottom-6 left-0 right-0 text-center">
+                  <span className="font-jakarta font-bold text-white bg-surface/50 backdrop-blur-md px-6 py-2 rounded-full text-sm inline-block border border-white/10">
+                    {product.name}
+                  </span>
+                </div>
+              </div>
+            ))
+          )}
         </motion.div>
       </div>
     </section>
