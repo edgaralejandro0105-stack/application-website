@@ -105,7 +105,7 @@ export function PlannerSection() {
         
         // Configurar valores iniciales dinámicos
         const initialServicios = {};
-        servicesData.forEach(s => initialServicios[s.name || s.service_type] = false);
+        servicesData.forEach(s => initialServicios[s.service_type] = false);
         
         setFormData(prev => ({
           ...prev,
@@ -136,7 +136,7 @@ export function PlannerSection() {
 
     // Calcular Servicios Dinámicamente
     availableServices.forEach(service => {
-      const name = service.name || service.service_type;
+      const name = service.service_type;
       if (formData.servicios[name]) {
         total += parseFloat(service.base_price || 0);
       }
@@ -500,7 +500,7 @@ export function PlannerSection() {
                         <div className="flex flex-col gap-3">
                           {availableServices.length > 0 ? (
                             availableServices.slice(0, Math.ceil(availableServices.length / 2)).map(service => {
-                              const name = service.name || service.service_type;
+                              const name = service.service_type;
                               return (
                                 <label key={name} className="flex items-center gap-3 cursor-pointer group">
                                   <input 
@@ -527,7 +527,7 @@ export function PlannerSection() {
                         <div className="h-4 mb-4"></div> {/* Spacer for alignment */}
                         <div className="flex flex-col gap-3">
                           {availableServices.length > 0 && availableServices.slice(Math.ceil(availableServices.length / 2)).map(service => {
-                            const name = service.name || service.service_type;
+                            const name = service.service_type;
                             return (
                               <label key={name} className="flex items-center gap-3 cursor-pointer group">
                                 <input 

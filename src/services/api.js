@@ -25,8 +25,9 @@ async function fetchAPI(endpoint, options = {}) {
   }
 }
 
-export const getProducts = async () => {
-  return fetchAPI('/products');
+export const getProducts = async (limit) => {
+  const url = limit ? `/products?limit=${limit}` : '/products';
+  return fetchAPI(url);
 };
 
 export const getEvents = async () => {

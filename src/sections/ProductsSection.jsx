@@ -13,7 +13,7 @@ export function ProductsSection() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await getProducts();
+        const response = await getProducts(10);
         // Asume que la API devuelve un array directamente o un objeto con data
         const data = response.data || response;
         setProducts(data);
