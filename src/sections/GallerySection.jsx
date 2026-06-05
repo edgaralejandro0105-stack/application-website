@@ -6,18 +6,18 @@ export function GallerySection() {
   const scrollRef = useRef(null);
 
   const images = [
-    { id: 1, src: '/src/assets/casona3.jpeg' },
-    { id: 2, src: '/src/assets/casona4.jpeg' },
-    { id: 3, src: '/src/assets/casona6.jpeg' },
-    { id: 4, src: '/src/assets/casona9.jpeg' },
-    { id: 5, title: '', src: '/src/assets/casona12.jpeg' },
-    { id: 6, title: '', src: '/src/assets/casona13.jpeg' },
-    { id: 7, title: '', src: '/src/assets/casona14.jpeg' },
-    { id: 8, title: '', src: '/src/assets/casona15.jpeg' },
-    { id: 9, title: '', src: '/src/assets/casona16.jpeg' },
-    { id: 10, title: '', src: '/src/assets/casona17.jpeg' },
-    { id: 11, title: '', src: '/src/assets/casona18.jpeg' },
-    { id: 12, title: '', src: '/src/assets/casona19.jpeg' }
+    { id: 1, src: '/assets/casona3.jpeg' },
+    { id: 2, src: '/assets/casona4.jpeg' },
+    { id: 3, src: '/assets/casona6.jpeg' },
+    { id: 4, src: '/assets/casona9.jpeg' },
+    { id: 5, title: '', src: '/assets/casona12.jpeg' },
+    { id: 6, title: '', src: '/assets/casona13.jpeg' },
+    { id: 7, title: '', src: '/assets/casona14.jpeg' },
+    { id: 8, title: '', src: '/assets/casona15.jpeg' },
+    { id: 9, title: '', src: '/assets/casona16.jpeg' },
+    { id: 10, title: '', src: '/assets/casona17.jpeg' },
+    { id: 11, title: '', src: '/assets/casona18.jpeg' },
+    { id: 12, title: '', src: '/assets/casona19.jpeg' }
   ];
 
   const scroll = (direction) => {

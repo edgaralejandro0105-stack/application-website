@@ -106,9 +106,9 @@ export function ProductsSection() {
             </div>
           ) : (
             products.map(product => (
-              <div key={product.product_id} className="min-w-[280px] md:min-w-[320px] h-64 relative rounded-xl overflow-hidden group cursor-pointer border border-white/5 snap-start shrink-0">
-                <img src={product.image_url || '/src/assets/coctel.png'} alt={product.name} className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
-                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent"></div>
+              <div key={product.product_id} className="min-w-[280px] md:min-w-[320px] h-64 relative rounded-xl overflow-hidden group cursor-pointer border border-primary/20 snap-start shrink-0 bg-primary-fixed">
+                <img src={product.image_url || '/assets/coctel.png'} alt={product.name} className="w-full h-full object-cover mix-blend-multiply opacity-90 group-hover:opacity-100 transition-all duration-500 group-hover:scale-105" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent"></div>
                 <div className="absolute bottom-6 left-0 right-0 text-center">
                   <span className="font-jakarta font-bold text-white bg-surface/50 backdrop-blur-md px-6 py-2 rounded-full text-sm inline-block border border-white/10">
                     {product.name}

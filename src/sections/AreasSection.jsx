@@ -75,7 +75,7 @@ export function AreasSection() {
               >
                 <Card className="bg-surface-container-low/30 border-white/5 flex flex-col h-full hover:-translate-y-1 transition-transform duration-300 group">
                   <div className="relative h-64 overflow-hidden rounded-t-md p-4">
-                     <img src={area.image_url || '/src/assets/casona11.jpeg'} alt={area.name} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105" />
+                     <img src={area.image_url || '/assets/casona11.jpeg'} alt={area.name} className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500 group-hover:scale-105" />
                      <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent"></div>
                      {/* Content positioned over image at bottom */}
                      <div className="absolute bottom-6 left-6 right-6">

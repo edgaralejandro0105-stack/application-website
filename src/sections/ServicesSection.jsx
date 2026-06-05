@@ -107,7 +107,7 @@ export function ServicesSection() {
           ) : (
             services.map(service => (
               <div key={service.service_id} className="min-w-[200px] md:min-w-[240px] h-56 relative rounded-xl overflow-hidden group cursor-pointer border border-white/5 snap-start shrink-0">
-                <img src={service.image_url || '/src/assets/dj.jpg'} alt={service.service_type} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500 group-hover:scale-105" />
+                <img src={service.image_url || '/assets/dj.jpg'} alt={service.name || service.service_type} className="w-full h-full object-cover opacity-60 group-hover:opacity-40 transition-opacity duration-500 group-hover:scale-105" />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent"></div>
                 
                 <div className="absolute inset-0 flex flex-col justify-end p-4 text-center transform transition-transform duration-300 translate-y-4 group-hover:translate-y-0">

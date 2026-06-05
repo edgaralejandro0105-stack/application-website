@@ -25,7 +25,7 @@ export function GlassNavbar() {
     <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 border-b ${scrolled ? 'bg-surface/80 backdrop-blur-[20px] py-3 border-white/10' : 'bg-transparent py-5 border-transparent'}`}>
       <div className="max-w-[1200px] mx-auto px-6 md:px-16 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <img src="/src/assets/casona_logo_2.png" alt="La Casona Fiestas" className={`w-auto transition-all duration-500 ${scrolled ? 'h-20' : 'h-28'}`} />
+          <img src="/assets/casona_logo_2.png" alt="La Casona Fiestas" className={`w-auto transition-all duration-500 ${scrolled ? 'h-20' : 'h-28'}`} />
         </div>
         
         <div className="hidden lg:flex items-center gap-8 font-jakarta text-sm font-medium text-on-surface-variant">

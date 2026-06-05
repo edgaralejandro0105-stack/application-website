@@ -85,7 +85,7 @@ export function EventsSection() {
                 <div className="w-full md:w-auto flex items-center justify-between md:justify-end gap-6 mt-4 md:mt-0">
                   <div className="w-20 h-20 rounded-md overflow-hidden hidden lg:block border border-white/10 bg-surface-variant/30">
                     <img 
-                      src={event.image_url || '/src/assets/casona12.jpeg'} 
+                      src={event.image_url || '/assets/casona12.jpeg'} 
                       alt={event.title || event.type_event} 
                       className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity" 
                     />

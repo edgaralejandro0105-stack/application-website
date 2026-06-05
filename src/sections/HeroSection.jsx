@@ -7,10 +7,10 @@ export function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const images = [
-    '/src/assets/casona11.jpeg',
-    '/src/assets/casona8.jpeg',
-    '/src/assets/casona16.jpeg',
-    '/src/assets/casona24.jpeg'
+    '/assets/casona11.jpeg',
+    '/assets/casona8.jpeg',
+    '/assets/casona16.jpeg',
+    '/assets/casona24.jpeg'
   ];
 
   useEffect(() => {
