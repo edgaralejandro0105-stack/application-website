@@ -64,7 +64,7 @@ export function PlannerSection() {
     setErrorConsulta(null);
     setSearchedConsulta(true);
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://api-lacasona.onrender.com/api';
       const response = await fetch(`${apiUrl}/events/website/status?email=${encodeURIComponent(consultaCorreo.trim())}`);
       if (response.ok) {
         const data = await response.json();
@@ -205,7 +205,7 @@ export function PlannerSection() {
     } else if (step === 2) {
       setIsSubmitting(true);
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://api-lacasona.onrender.com/api';
         const response = await fetch(`${apiUrl}/events/website`, {
           method: 'POST',
           headers: {
