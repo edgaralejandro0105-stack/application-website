@@ -203,12 +203,11 @@ export function PlannerSection() {
         });
 
         if (response.ok) {
-          // Envío de correo mediante EmailJS (como respaldo robusto)
+          // Preparar variables comunes
           const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-          const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
           const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
-          if (serviceId && templateId && publicKey && serviceId !== 'your_service_id') {
+          if (serviceId && publicKey && serviceId !== 'your_service_id') {
             const serviciosSeleccionados = Object.keys(formData.servicios)
               .filter(key => formData.servicios[key])
               .join(', ') || 'Ninguno';
@@ -218,38 +217,30 @@ export function PlannerSection() {
               .map(key => `${key}: ${formData.personal[key]}`)
               .join(', ') || 'Ninguno';
 
-            const messageBody = `
-Detalles de la Pre-reserva:
+            const fechaFormateada = formData.fecha ? formData.fecha.split('-').reverse().join('/') : 'N/A';
+
+            const messageBody = `Detalles de la Pre-reserva:
 👤 Cliente: ${formData.contacto.nombre}
 📞 Teléfono: ${formData.contacto.telefono}
 📧 Correo: ${formData.contacto.correo}
-📅 Fecha: ${formData.fecha ? formData.fecha.split('-').reverse().join('/') : 'N/A'}
+📅 Fecha: ${fechaFormateada}
 🏢 Salón: ${formData.salon}
 ⏱️ Horario: ${formData.horario}
 🎉 Tipo de Evento: ${formData.tipo}
 📝 Descripción: ${formData.descripcion || 'Sin descripción'}
 
-Servicios Seleccionados:
-${serviciosSeleccionados}
+Servicios Seleccionados: ${serviciosSeleccionados}
+Personal Requerido: ${personalRequerido}
+Costo Estimado: $${precioEstimado} USD`;
 
-Personal Requerido:
-${personalRequerido}
-
-Costo Estimado: $${precioEstimado} USD
-`;
-
-            const templateParams = {
+            const commonParams = {
               from_name: formData.contacto.nombre,
-              to_name: 'Administración La Casona',
-              message: messageBody,
-              reply_to: formData.contacto.correo,
-              // Mantenemos también los nombres originales por si editan la plantilla en su panel
               nombre_cliente: formData.contacto.nombre,
               correo_cliente: formData.contacto.correo,
               telefono_cliente: formData.contacto.telefono,
               salon: formData.salon,
               horario: formData.horario,
-              fecha: formData.fecha ? formData.fecha.split('-').reverse().join('/') : 'N/A',
+              fecha: fechaFormateada,
               tipo_evento: formData.tipo,
               descripcion: formData.descripcion || 'Sin descripción',
               servicios: serviciosSeleccionados,
@@ -257,13 +248,31 @@ Costo Estimado: $${precioEstimado} USD
               precio_estimado: precioEstimado
             };
 
-            emailjs.send(serviceId, templateId, templateParams, publicKey)
-              .then((result) => {
-                console.log('Correo enviado con EmailJS con éxito:', result.text);
-              })
-              .catch((err) => {
-                console.error('Error al enviar correo con EmailJS:', err);
-              });
+            // 1. Correo al ADMIN
+            const adminTemplateId = 'template_7mizlzg';
+            if (adminTemplateId) {
+              emailjs.send(serviceId, adminTemplateId, {
+                ...commonParams,
+                to_name: 'Administración La Casona',
+                message: messageBody,
+                reply_to: formData.contacto.correo,
+              }, publicKey)
+                .then(() => console.log('✅ Correo admin enviado'))
+                .catch(err => console.error('❌ Error correo admin:', err));
+            }
+
+            // 2. Correo al CLIENTE
+            const clientTemplateId = 'template_hpwtran';
+            if (clientTemplateId && formData.contacto.correo) {
+              emailjs.send(serviceId, clientTemplateId, {
+                ...commonParams,
+                to_name: formData.contacto.nombre,
+                to_email: formData.contacto.correo,
+                reply_to: 'lacasonadisco03@gmail.com',
+              }, publicKey)
+                .then(() => console.log('✅ Correo cliente enviado'))
+                .catch(err => console.error('❌ Error correo cliente:', err));
+            }
           }
 
           setStep(3);
