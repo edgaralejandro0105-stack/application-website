@@ -10,7 +10,7 @@ Durante esta implementación no fue necesario instalar dependencias radicalmente
 
 ### Backend (`backend casona` - Node.js / Express / Sequelize)
 * **`zod`**: Utilizado para la validación de esquemas (Schema Validation). Garantiza que el JSON recibido de internet tenga el formato y los tipos de datos correctos antes de tocar la lógica de base de datos.
-* **`socket.io`**: Servidor de WebSockets. Emite los eventos de notificaciones en tiempo real al panel administrativo.
+* **`socket.io`**: Servidor de WebSockets. Emite los eventos de notificaciones en tiempo real al panel administrativo
 * **`nodemailer`**: Gestiona el envío asíncrono de correos electrónicos transaccionales como medida de respaldo para alertar a los administradores.
 * **`sequelize`**: ORM que permitió mapear lógicamente a los clientes, eventos y salones sin escribir SQL crudo, facilitando métodos como `findByPk` y `findOne`.
 
