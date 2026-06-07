@@ -4,6 +4,7 @@ import { Button } from '../components/Button';
 import { ChevronDown, Calendar, ArrowLeft, Search, Clock, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getServices, getVenues, getEmployees } from '../services/api';
+import emailjs from '@emailjs/browser';
 export function PlannerSection() {
   const [step, setStep] = useState(1); // 1: Cotizador, 2: Contacto, 3: Success
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -202,6 +203,69 @@ export function PlannerSection() {
         });
 
         if (response.ok) {
+          // Envío de correo mediante EmailJS (como respaldo robusto)
+          const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+          const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+          const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+          if (serviceId && templateId && publicKey && serviceId !== 'your_service_id') {
+            const serviciosSeleccionados = Object.keys(formData.servicios)
+              .filter(key => formData.servicios[key])
+              .join(', ') || 'Ninguno';
+
+            const personalRequerido = Object.keys(formData.personal)
+              .filter(key => formData.personal[key] > 0)
+              .map(key => `${key}: ${formData.personal[key]}`)
+              .join(', ') || 'Ninguno';
+
+            const messageBody = `
+Detalles de la Pre-reserva:
+👤 Cliente: ${formData.contacto.nombre}
+📞 Teléfono: ${formData.contacto.telefono}
+📧 Correo: ${formData.contacto.correo}
+📅 Fecha: ${formData.fecha ? formData.fecha.split('-').reverse().join('/') : 'N/A'}
+🏢 Salón: ${formData.salon}
+⏱️ Horario: ${formData.horario}
+🎉 Tipo de Evento: ${formData.tipo}
+📝 Descripción: ${formData.descripcion || 'Sin descripción'}
+
+Servicios Seleccionados:
+${serviciosSeleccionados}
+
+Personal Requerido:
+${personalRequerido}
+
+Costo Estimado: $${precioEstimado} USD
+`;
+
+            const templateParams = {
+              from_name: formData.contacto.nombre,
+              to_name: 'Administración La Casona',
+              message: messageBody,
+              reply_to: formData.contacto.correo,
+              // Mantenemos también los nombres originales por si editan la plantilla en su panel
+              nombre_cliente: formData.contacto.nombre,
+              correo_cliente: formData.contacto.correo,
+              telefono_cliente: formData.contacto.telefono,
+              salon: formData.salon,
+              horario: formData.horario,
+              fecha: formData.fecha ? formData.fecha.split('-').reverse().join('/') : 'N/A',
+              tipo_evento: formData.tipo,
+              descripcion: formData.descripcion || 'Sin descripción',
+              servicios: serviciosSeleccionados,
+              personal: personalRequerido,
+              precio_estimado: precioEstimado
+            };
+
+            emailjs.send(serviceId, templateId, templateParams, publicKey)
+              .then((result) => {
+                console.log('Correo enviado con EmailJS con éxito:', result.text);
+              })
+              .catch((err) => {
+                console.error('Error al enviar correo con EmailJS:', err);
+              });
+          }
+
           setStep(3);
         } else {
           console.error('Error al crear la pre-reserva');
