@@ -4,7 +4,6 @@ import { Button } from '../components/Button';
 import { ChevronDown, Calendar, ArrowLeft, Search, Clock, CheckCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getServices, getVenues, getEmployees } from '../services/api';
-import emailjs from '@emailjs/browser';
 export function PlannerSection() {
   const [step, setStep] = useState(1); // 1: Cotizador, 2: Contacto, 3: Success
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -203,48 +202,6 @@ export function PlannerSection() {
         });
 
         if (response.ok) {
-          // Envío de correo mediante EmailJS
-          const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
-          const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
-          const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
-
-          if (serviceId && templateId && publicKey && serviceId !== 'your_service_id') {
-            // Mapeamos los servicios activos a un string legible
-            const serviciosSeleccionados = Object.keys(formData.servicios)
-              .filter(key => formData.servicios[key])
-              .join(', ') || 'Ninguno';
-
-            // Mapeamos el personal requerido a un string legible
-            const personalRequerido = Object.keys(formData.personal)
-              .filter(key => formData.personal[key] > 0)
-              .map(key => `${key}: ${formData.personal[key]}`)
-              .join(', ') || 'Ninguno';
-
-            const templateParams = {
-              nombre_cliente: formData.contacto.nombre,
-              correo_cliente: formData.contacto.correo,
-              telefono_cliente: formData.contacto.telefono,
-              salon: formData.salon,
-              horario: formData.horario,
-              fecha: formData.fecha ? formData.fecha.split('-').reverse().join('/') : 'N/A',
-              tipo_evento: formData.tipo,
-              descripcion: formData.descripcion || 'Sin descripción',
-              servicios: serviciosSeleccionados,
-              personal: personalRequerido,
-              precio_estimado: precioEstimado
-            };
-
-            emailjs.send(serviceId, templateId, templateParams, publicKey)
-              .then((result) => {
-                console.log('Correo enviado con EmailJS con éxito:', result.text);
-              })
-              .catch((err) => {
-                console.error('Error al enviar correo con EmailJS:', err);
-              });
-          } else {
-            console.warn('EmailJS no está configurado o tiene valores por defecto.');
-          }
-
           setStep(3);
         } else {
           console.error('Error al crear la pre-reserva');
