@@ -2,9 +2,21 @@ import React, { useState, useEffect } from 'react';
 import { Card } from '../components/Card';
 import { Button } from '../components/Button';
 import { ChevronDown, Calendar, ArrowLeft, Search, Clock, CheckCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion';
 import { getServices, getVenues, getEmployees } from '../services/api';
 import emailjs from '@emailjs/browser';
+
+function AnimatedNumber({ value }) {
+  const spring = useSpring(value, { mass: 0.8, stiffness: 75, damping: 15 });
+  const display = useTransform(spring, (current) => Math.round(current).toLocaleString('en-US'));
+
+  useEffect(() => {
+    spring.set(value);
+  }, [value, spring]);
+
+  return <motion.span>{display}</motion.span>;
+}
+
 export function PlannerSection() {
   const [step, setStep] = useState(1); // 1: Cotizador, 2: Contacto, 3: Success
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -325,9 +337,10 @@ Costo Estimado: $${precioEstimado} USD`;
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <Card className="max-w-4xl mx-auto p-8 border-white/10 bg-surface-container-low/40">
-            {step === 3 ? (
-              <div className="flex flex-col items-center justify-center py-16 text-center animate-in fade-in duration-500">
+          <Card className="max-w-4xl mx-auto p-8 border-white/10 bg-surface-container-low/40 overflow-hidden relative">
+            <AnimatePresence mode="wait">
+              {step === 3 ? (
+                <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.4 }} className="flex flex-col items-center justify-center py-16 text-center">
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -343,9 +356,9 @@ Costo Estimado: $${precioEstimado} USD`;
                   Tu solicitud ha sido guardada en nuestra base de datos y se ha enviado un correo de confirmación. Un miembro de nuestro equipo se pondrá en contacto contigo a la brevedad para confirmar los detalles.
                 </p>
                 <Button variant="outline" onClick={() => { setStep(1); setPrecioEstimado(0); }}>Cerrar</Button>
-              </div>
-            ) : activeTab === 'consulta' ? (
-              <div className="flex flex-col gap-8 animate-in fade-in duration-500">
+                </motion.div>
+              ) : activeTab === 'consulta' ? (
+                <motion.div key="consulta" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }} className="flex flex-col gap-8">
                 <div className="text-center max-w-lg mx-auto">
                   <h3 className="font-playfair text-xl md:text-2xl font-bold text-white mb-2">Consulta el estado de tu pre-reserva</h3>
                   <p className="font-jakarta text-on-surface-variant text-sm">
@@ -479,12 +492,13 @@ Costo Estimado: $${precioEstimado} USD`;
                     )}
                   </div>
                 )}
-              </div>
-            ) : (
-              <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-                
-                {step === 1 && (
-                  <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-8">
+                </motion.div>
+              ) : (
+                <motion.form key="reserva-form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }} className="flex flex-col gap-8" onSubmit={handleSubmit}>
+                  
+                  <AnimatePresence mode="wait">
+                    {step === 1 && (
+                      <motion.div key="step1" initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} transition={{ duration: 0.3 }} className="flex flex-col gap-8">
                     {/* Top Row: Selects & Date */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="flex flex-col gap-2">
@@ -661,11 +675,11 @@ Costo Estimado: $${precioEstimado} USD`;
                         </div>
                       </div>
                     </div>
-                  </motion.div>
-                )}
+                      </motion.div>
+                    )}
 
-                {step === 2 && (
-                  <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="flex flex-col gap-6">
+                    {step === 2 && (
+                      <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 20 }} transition={{ duration: 0.3 }} className="flex flex-col gap-6">
                     <button type="button" onClick={() => setStep(1)} className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors self-start mb-2">
                       <ArrowLeft size={18} /> Volver a los detalles
                     </button>
@@ -674,7 +688,7 @@ Costo Estimado: $${precioEstimado} USD`;
                       <h4 className="text-lg font-playfair font-bold text-white mb-2">Resumen de tu Cotización</h4>
                       <p className="text-sm font-jakarta text-on-surface-variant mb-1">Has seleccionado el <strong>{formData.salon}</strong> para el <strong>{formData.fecha || 'fecha por definir'}</strong>.</p>
                       <p className="text-sm font-jakarta text-on-surface-variant mb-4">El costo estimado incluye todos los servicios y personal solicitados.</p>
-                      <div className="text-3xl font-bold text-primary">${precioEstimado} USD</div>
+                      <div className="text-3xl font-bold text-primary">$<AnimatedNumber value={precioEstimado} /> USD</div>
                     </div>
 
                     <h4 className="text-lg font-playfair font-bold text-white mb-2">Tus Datos de Contacto</h4>
@@ -692,22 +706,23 @@ Costo Estimado: $${precioEstimado} USD`;
                         <input type="email" required value={formData.contacto.correo} onChange={e => setFormData({...formData, contacto: {...formData.contacto, correo: e.target.value}})} placeholder="ejemplo@correo.com" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant" />
                       </div>
                     </div>
-                  </motion.div>
-                )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
-                {/* Footer del Formulario */}
+                  {/* Footer del Formulario */}
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-6 mt-6 pt-6 border-t border-white/10">
                   {step === 1 && (
                     <div className="flex flex-col">
                       <span className="text-sm font-jakarta text-on-surface-variant uppercase tracking-wider">Cotización Estimada</span>
-                      <span className="text-2xl font-bold text-white">${precioEstimado} USD</span>
+                      <span className="text-2xl font-bold text-white">$<AnimatedNumber value={precioEstimado} /> USD</span>
                     </div>
                   )}
                   
                   {step === 2 && (
                     <div className="flex flex-col">
                       <span className="text-sm font-jakarta text-on-surface-variant uppercase tracking-wider">Total a Reservar</span>
-                      <span className="text-2xl font-bold text-white">${precioEstimado} USD</span>
+                      <span className="text-2xl font-bold text-white">$<AnimatedNumber value={precioEstimado} /> USD</span>
                     </div>
                   )}
 
@@ -725,8 +740,9 @@ Costo Estimado: $${precioEstimado} USD`;
                   </Button>
                 </div>
 
-              </form>
-            )}
+                </motion.form>
+              )}
+            </AnimatePresence>
           </Card>
         </motion.div>
       </div>

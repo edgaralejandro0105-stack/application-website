@@ -77,6 +77,15 @@ export default {
       boxShadow: {
         'neon': '0 0 20px -5px rgba(208, 188, 255, 0.4)',
         'neon-hover': '0 0 30px -5px rgba(208, 188, 255, 0.6)',
+      },
+      keyframes: {
+        shine: {
+          '0%': { left: '-75%' },
+          '100%': { left: '125%' }
+        }
+      },
+      animation: {
+        shine: 'shine 0.8s ease-in-out'
       }
     },
   },

@@ -1,45 +1,61 @@
-import React, { useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
+import { TiltCard } from '../components/TiltCard';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export function GallerySection() {
   const scrollRef = useRef(null);
+  const isPaused = useRef(false);
+  const animFrameRef = useRef(null);
+  const SPEED = 0.6; // px por frame
 
   const images = [
     { id: 1, src: '/assets/casona3.jpeg' },
     { id: 2, src: '/assets/casona4.jpeg' },
     { id: 3, src: '/assets/casona6.jpeg' },
     { id: 4, src: '/assets/casona9.jpeg' },
-    { id: 5, title: '', src: '/assets/casona12.jpeg' },
-    { id: 6, title: '', src: '/assets/casona13.jpeg' },
-    { id: 7, title: '', src: '/assets/casona14.jpeg' },
-    { id: 8, title: '', src: '/assets/casona15.jpeg' },
-    { id: 9, title: '', src: '/assets/casona16.jpeg' },
-    { id: 10, title: '', src: '/assets/casona17.jpeg' },
-    { id: 11, title: '', src: '/assets/casona18.jpeg' },
-    { id: 12, title: '', src: '/assets/casona19.jpeg' }
+    { id: 5, src: '/assets/casona12.jpeg' },
+    { id: 6, src: '/assets/casona13.jpeg' },
+    { id: 7, src: '/assets/casona14.jpeg' },
+    { id: 8, src: '/assets/casona15.jpeg' },
+    { id: 9, src: '/assets/casona16.jpeg' },
+    { id: 10, src: '/assets/casona17.jpeg' },
+    { id: 11, src: '/assets/casona18.jpeg' },
+    { id: 12, src: '/assets/casona19.jpeg' },
   ];
 
-  const scroll = (direction) => {
-    if (scrollRef.current) {
-      const scrollAmount = direction === 'left' ? -600 : 600;
-      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
+  // Duplicar para efecto de loop infinito
+  const allImages = [...images, ...images];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (scrollRef.current) {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-        if (scrollLeft + clientWidth >= scrollWidth - 10) {
-          scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          scrollRef.current.scrollBy({ left: 600, behavior: 'smooth' });
+  const startScroll = useCallback(() => {
+    const step = () => {
+      const el = scrollRef.current;
+      if (el && !isPaused.current) {
+        el.scrollLeft += SPEED;
+        // Cuando llegamos a la mitad (el set duplicado), volvemos al inicio sin salto visible
+        if (el.scrollLeft >= el.scrollWidth / 2) {
+          el.scrollLeft -= el.scrollWidth / 2;
         }
       }
-    }, 4000);
-    return () => clearInterval(interval);
+      animFrameRef.current = requestAnimationFrame(step);
+    };
+    animFrameRef.current = requestAnimationFrame(step);
   }, []);
+
+  useEffect(() => {
+    startScroll();
+    return () => cancelAnimationFrame(animFrameRef.current);
+  }, [startScroll]);
+
+  const scrollManual = (direction) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    isPaused.current = true;
+    const cardWidth = el.clientWidth * 0.5 + 24;
+    el.scrollBy({ left: direction === 'left' ? -cardWidth : cardWidth, behavior: 'smooth' });
+    // Reanudar scroll automático después de 1.5s
+    setTimeout(() => { isPaused.current = false; }, 1500);
+  };
 
   return (
     <section id="galeria" className="py-16 bg-background relative z-10">
@@ -54,44 +70,60 @@ export function GallerySection() {
             <h2 className="font-playfair text-2xl md:text-3xl font-bold text-white mb-2 uppercase tracking-wide">Galería de Eventos</h2>
             <p className="font-jakarta text-on-surface-variant text-sm">Momentos inolvidables capturados en La Casona.</p>
           </motion.div>
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
             transition={{ duration: 0.6 }}
-            className="flex gap-2">
-            <button 
-              onClick={() => scroll('left')}
-              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-on-surface hover:bg-surface-variant transition-colors"
+            className="hidden md:flex gap-2"
+          >
+            <button
+              onClick={() => scrollManual('left')}
+              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white bg-surface-container-highest/30 backdrop-blur-md hover:bg-primary/20 hover:border-primary/50 transition-all duration-300"
             >
               <ChevronLeft size={20} />
             </button>
-            <button 
-              onClick={() => scroll('right')}
-              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-on-surface hover:bg-surface-variant transition-colors"
+            <button
+              onClick={() => scrollManual('right')}
+              className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center text-white bg-surface-container-highest/30 backdrop-blur-md hover:bg-primary/20 hover:border-primary/50 transition-all duration-300"
             >
               <ChevronRight size={20} />
             </button>
           </motion.div>
         </div>
 
-        <motion.div 
-          ref={scrollRef}
+        <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-50px" }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="flex gap-6 overflow-x-auto pb-4 hide-scrollbar snap-x snap-mandatory"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          className="relative"
         >
-          {images.map(img => (
-            <div 
-              key={img.id} 
-              className="min-w-[100%] md:min-w-[calc(50%-12px)] h-64 md:h-80 relative rounded-2xl overflow-hidden border border-white/5 group snap-start shrink-0"
-            >
-              <img src={img.src} alt="Galería" className="w-full h-full object-cover opacity-70 group-hover:opacity-100 transition-opacity duration-500" />
-            </div>
-          ))}
+          <div
+            ref={scrollRef}
+            onMouseEnter={() => { isPaused.current = true; }}
+            onMouseLeave={() => { isPaused.current = false; }}
+            className="flex gap-6 overflow-x-auto pb-6 pt-2"
+            style={{
+              scrollbarWidth: 'none',
+              msOverflowStyle: 'none',
+              maskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 5%, black 95%, transparent)',
+            }}
+          >
+            {allImages.map((img, index) => (
+              <TiltCard
+                key={index}
+                className="w-[85vw] md:w-[45vw] h-64 md:h-80 relative rounded-2xl overflow-hidden border border-white/5 group shrink-0"
+              >
+                <img
+                  src={img.src}
+                  alt="Galería"
+                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                />
+              </TiltCard>
+            ))}
+          </div>
         </motion.div>
       </div>
     </section>
