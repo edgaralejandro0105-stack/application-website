@@ -249,7 +249,7 @@ Costo Estimado: $${precioEstimado} USD`;
             };
 
             // 1. Correo al ADMIN
-            const adminTemplateId = 'template_7mizlzg';
+            const adminTemplateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
             if (adminTemplateId) {
               emailjs.send(serviceId, adminTemplateId, {
                 ...commonParams,
@@ -262,7 +262,7 @@ Costo Estimado: $${precioEstimado} USD`;
             }
 
             // 2. Correo al CLIENTE
-            const clientTemplateId = 'template_hpwtran';
+            const clientTemplateId = import.meta.env.VITE_EMAILJS_CLIENT_TEMPLATE_ID;
             if (clientTemplateId && formData.contacto.correo) {
               emailjs.send(serviceId, clientTemplateId, {
                 ...commonParams,
