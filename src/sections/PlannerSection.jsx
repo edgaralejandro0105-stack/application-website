@@ -308,6 +308,20 @@ Costo Estimado: $${precioEstimado} USD`;
   return (
     <section id="planificador" className="py-24 bg-background relative z-10">
       <SideDecorations />
+      <style>{`
+        .form-glow-wrapper {
+          position: relative;
+          border-radius: 1rem;
+          isolation: isolate;
+        }
+        .form-light {
+          position: absolute;
+          border-radius: 50%;
+          filter: blur(40px);
+          pointer-events: none;
+          z-index: 0;
+        }
+      `}</style>
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -343,7 +357,44 @@ Costo Estimado: $${precioEstimado} USD`;
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <Card className="max-w-4xl mx-auto p-8 border-white/10 bg-surface-container-low/40 overflow-hidden relative">
+          <div className="form-glow-wrapper">
+            <motion.div
+              className="form-light"
+              style={{ width: 80, height: 80, background: '#d0bcff', left: '-5%', top: '-5%' }}
+              animate={{ opacity: [0, 0.4, 0, 0.3, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', times: [0, 0.15, 0.35, 0.55, 1] }}
+            />
+            <motion.div
+              className="form-light"
+              style={{ width: 60, height: 60, background: '#4edea3', right: '5%', top: '-3%' }}
+              animate={{ opacity: [0, 0.35, 0, 0.25, 0] }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', times: [0, 0.1, 0.3, 0.5, 1] }}
+            />
+            <motion.div
+              className="form-light"
+              style={{ width: 70, height: 70, background: '#ffb2b7', left: '10%', bottom: '-5%' }}
+              animate={{ opacity: [0, 0.3, 0, 0.35, 0] }}
+              transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut', times: [0, 0.2, 0.4, 0.6, 1] }}
+            />
+            <motion.div
+              className="form-light"
+              style={{ width: 90, height: 90, background: '#ffe74d', right: '-5%', bottom: '-3%' }}
+              animate={{ opacity: [0, 0.25, 0, 0.3, 0] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', times: [0, 0.12, 0.32, 0.52, 1] }}
+            />
+            <motion.div
+              className="form-light"
+              style={{ width: 50, height: 50, background: '#00bfff', left: '50%', top: '-8%' }}
+              animate={{ opacity: [0, 0.3, 0, 0.2, 0] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut', times: [0, 0.18, 0.38, 0.58, 1] }}
+            />
+            <motion.div
+              className="form-light"
+              style={{ width: 65, height: 65, background: '#ff6b2d', right: '15%', bottom: '-8%' }}
+              animate={{ opacity: [0, 0.2, 0, 0.3, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', times: [0, 0.08, 0.28, 0.48, 1] }}
+            />
+          <Card className="max-w-4xl mx-auto p-8 border-white/10 bg-surface-container-low/40 overflow-hidden relative z-10">
             <AnimatePresence mode="wait">
               {step === 3 ? (
                 <motion.div key="success" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }} transition={{ duration: 0.4 }} className="flex flex-col items-center justify-center py-16 text-center">
@@ -762,6 +813,7 @@ Costo Estimado: $${precioEstimado} USD`;
               )}
             </AnimatePresence>
           </Card>
+          </div>
         </motion.div>
       </div>
     </section>

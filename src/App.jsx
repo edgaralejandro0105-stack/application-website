@@ -7,6 +7,7 @@ import { ProductsSection } from './sections/ProductsSection';
 import { ServicesSection } from './sections/ServicesSection';
 import { GallerySection } from './sections/GallerySection';
 import { PlannerSection } from './sections/PlannerSection';
+import { LocationSection } from './sections/LocationSection';
 import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
 import { SideDecorations } from './components/SideDecorations';
@@ -35,6 +36,7 @@ function App() {
         <ServicesSection />
         <GallerySection />
         <PlannerSection />
+        <LocationSection />
       </main>
       
       <FloatingWhatsApp />
