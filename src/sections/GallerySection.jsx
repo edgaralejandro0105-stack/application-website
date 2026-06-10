@@ -1,13 +1,23 @@
-import React, { useRef, useEffect, useCallback } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { TiltCard } from '../components/TiltCard';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { StrobeBackground } from '../components/StrobeBackground';
+import { SideDecorations } from '../components/SideDecorations';
 
 export function GallerySection() {
   const scrollRef = useRef(null);
   const isPaused = useRef(false);
   const animFrameRef = useRef(null);
   const SPEED = 0.6; // px por frame
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  useEffect(() => {
+    if (!selectedImage) return;
+    const handleKey = (e) => { if (e.key === 'Escape') setSelectedImage(null); };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [selectedImage]);
 
   const images = [
     { id: 1, src: '/assets/casona3.jpeg' },
@@ -58,7 +68,9 @@ export function GallerySection() {
   };
 
   return (
-    <section id="galeria" className="py-16 bg-background relative z-10">
+    <><section id="galeria" className="py-16 bg-background relative z-10">
+      <SideDecorations />
+      <StrobeBackground />
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">
         <div className="flex items-end justify-between mb-8">
           <motion.div
@@ -119,7 +131,8 @@ export function GallerySection() {
                 <img
                   src={img.src}
                   alt="Galería"
-                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500"
+                  onClick={() => setSelectedImage(img.src)}
+                  className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-500 cursor-pointer"
                 />
               </TiltCard>
             ))}
@@ -127,5 +140,38 @@ export function GallerySection() {
         </motion.div>
       </div>
     </section>
+    {/* Lightbox */}
+    <AnimatePresence>
+      {selectedImage && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 backdrop-blur-sm p-8"
+          onClick={() => setSelectedImage(null)}
+        >
+          <div className="relative inline-flex" onClick={(e) => e.stopPropagation()}>
+            <button
+              onClick={() => setSelectedImage(null)}
+              className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-black/70 flex items-center justify-center text-white hover:bg-black/90 transition-all z-10"
+            >
+              <X size={18} />
+            </button>
+            <motion.img
+              key={selectedImage}
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              src={selectedImage}
+              alt="Galería"
+              className="max-w-[80vw] max-h-[70vh] w-auto h-auto object-contain rounded-lg shadow-2xl"
+            />
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </>
   );
 }

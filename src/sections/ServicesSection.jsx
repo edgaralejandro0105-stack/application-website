@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getServices } from '../services/api';
+import { StrobeBackground } from '../components/StrobeBackground';
+import { SideDecorations } from '../components/SideDecorations';
 
 export function ServicesSection() {
   const scrollRef = useRef(null);
@@ -59,6 +61,8 @@ export function ServicesSection() {
 
   return (
     <section id="servicios" className="py-16 bg-background relative z-10">
+      <SideDecorations />
+      <StrobeBackground />
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">
         <div className="flex items-end justify-between mb-10">
           <motion.div

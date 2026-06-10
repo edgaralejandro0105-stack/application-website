@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../components/Button';
 import { ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { SideDecorations } from '../components/SideDecorations';
+
 
 export function HeroSection() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -47,6 +49,7 @@ export function HeroSection() {
 
   return (
     <section className="relative h-screen flex items-center justify-center bg-background overflow-hidden">
+      <SideDecorations />
       {/* Background Image Carousel with Ken Burns Effect */}
       <div className="absolute inset-0 z-0">
         <AnimatePresence mode="popLayout">

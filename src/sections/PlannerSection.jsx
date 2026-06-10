@@ -5,6 +5,8 @@ import { ChevronDown, Calendar, ArrowLeft, Search, Clock, CheckCircle } from 'lu
 import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion';
 import { getServices, getVenues, getEmployees } from '../services/api';
 import emailjs from '@emailjs/browser';
+import { SideDecorations } from '../components/SideDecorations';
+
 
 function AnimatedNumber({ value }) {
   const spring = useSpring(value, { mass: 0.8, stiffness: 75, damping: 15 });
@@ -86,6 +88,7 @@ export function PlannerSection() {
     horario: '20:00-03:00',
     fecha: '',
     tipo: 'Bodas',
+    invitados: '',
     descripcion: '',
     servicios: {},
     personal: {
@@ -239,6 +242,7 @@ export function PlannerSection() {
 🏢 Salón: ${formData.salon}
 ⏱️ Horario: ${formData.horario}
 🎉 Tipo de Evento: ${formData.tipo}
+👥 Invitados: ${formData.invitados || 'No especificado'}
 📝 Descripción: ${formData.descripcion || 'Sin descripción'}
 
 Servicios Seleccionados: ${serviciosSeleccionados}
@@ -254,6 +258,7 @@ Costo Estimado: $${precioEstimado} USD`;
               horario: formData.horario,
               fecha: fechaFormateada,
               tipo_evento: formData.tipo,
+              invitados: formData.invitados || 'No especificado',
               descripcion: formData.descripcion || 'Sin descripción',
               servicios: serviciosSeleccionados,
               personal: personalRequerido,
@@ -302,6 +307,7 @@ Costo Estimado: $${precioEstimado} USD`;
 
   return (
     <section id="planificador" className="py-24 bg-background relative z-10">
+      <SideDecorations />
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -580,6 +586,18 @@ Costo Estimado: $${precioEstimado} USD`;
                         value={formData.descripcion} 
                         onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
                         className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary" />
+                    </div>
+
+                    {/* Número de Invitados */}
+                    <div className="flex flex-col gap-2">
+                      <label className="text-label-md text-on-surface-variant uppercase tracking-[0.05em]">Número de Invitados</label>
+                      <input 
+                        type="number" 
+                        min="1"
+                        value={formData.invitados}
+                        onChange={(e) => setFormData({...formData, invitados: e.target.value})}
+                        placeholder="Ej: 50"
+                        className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant" />
                     </div>
 
                     {/* Checkboxes Dinámicos */}

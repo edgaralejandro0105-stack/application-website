@@ -9,6 +9,7 @@ import { GallerySection } from './sections/GallerySection';
 import { PlannerSection } from './sections/PlannerSection';
 import { Footer } from './components/Footer';
 import { FloatingWhatsApp } from './components/FloatingWhatsApp';
+import { SideDecorations } from './components/SideDecorations';
 import './index.css';
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
   }, []);
 
   return (
-    <div className="bg-background min-h-screen text-on-background selection:bg-primary/30 selection:text-primary flex flex-col">
+    <div className="relative bg-background min-h-screen text-on-background selection:bg-primary/30 selection:text-primary flex flex-col">
       <GlassNavbar />
       <main className="flex-1">
         <HeroSection />

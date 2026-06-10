@@ -1,5 +1,7 @@
 import React from 'react';
 import { Phone, Mail, MapPin, Clock, User } from 'lucide-react';
+import { SideDecorations } from '../components/SideDecorations';
+
 
 const SOCIAL_LINKS = {
   facebook:  "https://www.facebook.com/lacasona.fiestas",                                      
@@ -11,7 +13,8 @@ const SOCIAL_LINKS = {
 
 export function Footer() {
   return (
-    <footer className="bg-surface-container-lowest py-12 border-t border-white/5 mt-auto text-on-surface">
+    <footer className="relative bg-surface-container-lowest py-12 border-t border-white/5 mt-auto text-on-surface">
+      <SideDecorations />
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">
         
         {/* Main Footer Content */}

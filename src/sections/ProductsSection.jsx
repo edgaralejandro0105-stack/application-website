@@ -3,6 +3,8 @@ import { Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getProducts } from '../services/api';
 import { TiltCard } from '../components/TiltCard';
+import { StrobeBackground } from '../components/StrobeBackground';
+import { SideDecorations } from '../components/SideDecorations';
 
 export function ProductsSection() {
   const scrollRef = useRef(null);
@@ -59,6 +61,8 @@ export function ProductsSection() {
 
   return (
     <section id="productos" className="py-16 bg-background relative z-10">
+      <SideDecorations />
+      <StrobeBackground />
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">
         <div className="flex items-end justify-between mb-8">
           <motion.div
