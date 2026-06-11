@@ -15,6 +15,10 @@ import './index.css';
 
 function App() {
   useEffect(() => {
+    // Ping API to wake up Render server (Cold Start Mitigation)
+    const apiUrl = import.meta.env.VITE_API_URL || 'https://api-lacasona.onrender.com/api';
+    fetch(`${apiUrl}/services`).catch(() => {});
+
     const lenis = new Lenis();
     function raf(time) {
       lenis.raf(time);
