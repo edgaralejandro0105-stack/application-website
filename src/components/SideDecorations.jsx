@@ -2,7 +2,7 @@ import React from 'react';
 
 export function SideDecorations() {
   return (
-    <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden="true">
+    <div className="absolute inset-0 z-0 pointer-events-none" aria-hidden="true">
       {/* === CÍRCULOS GRANDES CON BLUR === */}
       <div className="absolute -top-40 -left-40 w-96 h-96 rounded-full border border-primary/10" />
       <div className="absolute -top-32 -left-32 w-72 h-72 rounded-full bg-primary/5 blur-[80px]" />

@@ -27,7 +27,7 @@ export function AreasSection() {
   }, []);
 
   return (
-    <section id="zonas" className="py-24 bg-background relative z-10">
+    <section id="zonas" className="py-16 bg-background relative z-10">
       <SideDecorations />
       <StrobeBackground />
       <div className="max-w-[1200px] mx-auto px-6 md:px-16 text-center">

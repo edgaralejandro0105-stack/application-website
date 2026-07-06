@@ -60,7 +60,7 @@ export function ServicesSection() {
   };
 
   return (
-    <section id="servicios" className="py-16 bg-background relative z-10">
+    <section id="servicios" className="py-10 bg-background relative z-10">
       <SideDecorations />
       <StrobeBackground />
       <div className="max-w-[1200px] mx-auto px-6 md:px-16">

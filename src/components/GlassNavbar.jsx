@@ -89,7 +89,7 @@ export function GlassNavbar() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="lg:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-[20px] border-b border-white/10 flex flex-col items-center py-8 gap-6 shadow-2xl h-screen overflow-y-auto pb-32"
+            className="lg:hidden absolute top-full left-0 w-full bg-surface/95 backdrop-blur-[20px] border-b border-white/10 flex flex-col items-center py-8 gap-6 shadow-2xl h-[calc(100dvh-5rem)] overflow-y-auto pb-32"
           >
             {navLinks.map(link => (
               <a 

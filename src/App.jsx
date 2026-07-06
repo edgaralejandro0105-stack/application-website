@@ -1,23 +1,17 @@
 import React, { useEffect } from 'react';
 import Lenis from 'lenis';
-import { GlassNavbar } from './components/GlassNavbar';
-import { HeroSection } from './sections/HeroSection';
-import { AreasSection } from './sections/AreasSection';
-import { ProductsSection } from './sections/ProductsSection';
-import { ServicesSection } from './sections/ServicesSection';
-import { GallerySection } from './sections/GallerySection';
-import { PlannerSection } from './sections/PlannerSection';
-import { LocationSection } from './sections/LocationSection';
-import { Footer } from './components/Footer';
-import { FloatingWhatsApp } from './components/FloatingWhatsApp';
-import { SideDecorations } from './components/SideDecorations';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { LandingPage } from './pages/LandingPage';
+import { ClientPortal } from './pages/ClientPortal';
 import './index.css';
+
+import { ClientAuthProvider } from './context/ClientAuthContext';
 
 function App() {
   useEffect(() => {
     // Ping API to wake up Render server (Cold Start Mitigation)
     const apiUrl = import.meta.env.VITE_API_URL || 'https://api-lacasona.onrender.com/api';
-    fetch(`${apiUrl}/services`).catch(() => {});
+    fetch(`${apiUrl}/products`).catch(() => {});
 
     const lenis = new Lenis();
     function raf(time) {
@@ -31,20 +25,15 @@ function App() {
   }, []);
 
   return (
-    <div className="relative bg-background min-h-screen text-on-background selection:bg-primary/30 selection:text-primary flex flex-col">
-      <GlassNavbar />
-      <main className="flex-1">
-        <HeroSection />
-        <AreasSection />
-        <ProductsSection />
-        <ServicesSection />
-        <GallerySection />
-        <PlannerSection />
-        <LocationSection />
-      </main>
-      
-      <FloatingWhatsApp />
-      <Footer />
+    <div className="relative bg-background min-h-screen text-on-background selection:bg-primary/30 selection:text-primary flex flex-col overflow-x-clip">
+      <ClientAuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/portal" element={<ClientPortal />} />
+          </Routes>
+        </BrowserRouter>
+      </ClientAuthProvider>
     </div>
   );
 }

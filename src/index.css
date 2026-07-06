@@ -3,16 +3,57 @@
 @tailwind utilities;
 
 @layer base {
-  body {
+  html, body {
     @apply bg-background text-on-background font-jakarta antialiased;
   }
   
+  /* Lenis recommended CSS */
+  html.lenis, html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
+  }
   h1, h2, h3, h4, h5, h6 {
     @apply font-playfair;
   }
 
   section[id] {
     scroll-margin-top: 80px;
+    position: relative;
+  }
+
+  /* Gradientes de fusión para suavizar transiciones entre secciones */
+  section[id]::before, section[id]::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 120px;
+    pointer-events: none;
+    z-index: 5;
+  }
+
+  section[id]::before {
+    top: 0;
+    background: linear-gradient(to bottom, theme('colors.background') 10%, transparent 100%);
+  }
+
+  section[id]::after {
+    bottom: 0;
+    background: linear-gradient(to top, theme('colors.background') 10%, transparent 100%);
+  }
+
+  /* Asegurar que el contenido principal siempre esté por encima de los fondos y gradientes */
+  section[id] > div:not(.absolute) {
+    position: relative;
+    z-index: 10;
   }
 }
 
@@ -23,5 +64,20 @@
   
   .text-shadow-neon {
     text-shadow: 0 0 10px rgba(208, 188, 255, 0.5);
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  
+  .animate-marquee {
+    animation: marquee 40s linear infinite;
+    display: flex;
+    width: max-content;
+  }
+
+  .animate-marquee:hover {
+    animation-play-state: paused;
   }
 }

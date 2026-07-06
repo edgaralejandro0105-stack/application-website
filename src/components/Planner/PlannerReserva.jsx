@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence, useSpring, useTransform } from 'framer-motion';
-import { ChevronDown, Calendar, ArrowLeft } from 'lucide-react';
+import { ChevronDown, Calendar, ArrowLeft, User, IdCard, Phone, Mail } from 'lucide-react';
 import { Button } from '../Button';
+import { AvailabilityCalendar } from '../AvailabilityCalendar';
 
 function AnimatedNumber({ value }) {
   const spring = useSpring(value, { mass: 0.8, stiffness: 75, damping: 15 });
@@ -75,16 +76,32 @@ export function PlannerReserva({ logic }) {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 relative">
                 <label className="text-label-md text-on-surface-variant uppercase tracking-[0.05em]">Fecha</label>
                 <div className="relative">
-                  <input 
-                    type="date" 
-                    required
-                    value={formData.fecha} 
-                    onChange={(e) => setFormData({...formData, fecha: e.target.value})}
-                    className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:opacity-0 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:cursor-pointer cursor-pointer" />
-                  <Calendar className="absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none" size={18} />
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      const el = document.getElementById('calendar-popover');
+                      if (el) el.classList.toggle('hidden');
+                    }}
+                    className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-left text-on-surface focus:outline-none focus:border-primary cursor-pointer flex items-center justify-between"
+                  >
+                    <span className={formData.fecha ? 'text-on-surface' : 'text-outline-variant'}>
+                      {formData.fecha || 'Seleccionar fecha'}
+                    </span>
+                    <Calendar className="text-outline pointer-events-none" size={18} />
+                  </button>
+                  <div id="calendar-popover" className="hidden absolute top-full left-1/2 -translate-x-1/2 sm:left-0 sm:translate-x-0 mt-2 z-50">
+                    <AvailabilityCalendar 
+                      value={formData.fecha} 
+                      onChange={(date) => setFormData({...formData, fecha: date})} 
+                      onClose={() => {
+                        const el = document.getElementById('calendar-popover');
+                        if (el) el.classList.add('hidden');
+                      }} 
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -235,17 +252,31 @@ export function PlannerReserva({ logic }) {
             </div>
 
             <h4 className="text-lg font-playfair font-bold text-white mb-2">Tus Datos de Contacto</h4>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="flex flex-col gap-2">
-                <label className="text-label-md text-on-surface-variant uppercase tracking-[0.05em]">Nombre Completo *</label>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-on-surface-variant flex items-center gap-2">
+                  <User className="w-4 h-4 text-primary" /> Nombre y Apellido
+                </label>
                 <input type="text" required minLength={3} maxLength={60} disabled={isSubmitting} value={formData.contacto.nombre} onChange={e => setFormData({...formData, contacto: {...formData.contacto, nombre: e.target.value}})} placeholder="Ej: Juan Pérez" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant disabled:opacity-50" />
               </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-label-md text-on-surface-variant uppercase tracking-[0.05em]">Teléfono (WhatsApp) *</label>
+              
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-on-surface-variant flex items-center gap-2">
+                  <IdCard className="w-4 h-4 text-primary" /> Cédula / Documento
+                </label>
+                <input type="text" required minLength={5} maxLength={20} disabled={isSubmitting} value={formData.contacto.cedula} onChange={e => setFormData({...formData, contacto: {...formData.contacto, cedula: e.target.value}})} placeholder="Ej: V-12345678" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant disabled:opacity-50" />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-on-surface-variant flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-primary" /> Teléfono
+                </label>
                 <input type="tel" required pattern="[\+0-9\-\s]{8,20}" title="Ingrese un número válido (solo números, +, guiones o espacios). Ej: +58 414 1234567" disabled={isSubmitting} value={formData.contacto.telefono} onChange={e => setFormData({...formData, contacto: {...formData.contacto, telefono: e.target.value}})} placeholder="Ej: +58 414 1234567" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant disabled:opacity-50" />
               </div>
-              <div className="flex flex-col gap-2 md:col-span-2">
-                <label className="text-label-md text-on-surface-variant uppercase tracking-[0.05em]">Correo Electrónico *</label>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-on-surface-variant flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-primary" /> Correo Electrónico
+                </label>
                 <input type="email" required disabled={isSubmitting} value={formData.contacto.correo} onChange={e => setFormData({...formData, contacto: {...formData.contacto, correo: e.target.value}})} placeholder="ejemplo@correo.com" className="w-full bg-surface-container-highest/50 border border-outline-variant rounded-md px-4 py-3 text-on-surface focus:outline-none focus:border-primary placeholder:text-outline-variant disabled:opacity-50" />
               </div>
             </div>

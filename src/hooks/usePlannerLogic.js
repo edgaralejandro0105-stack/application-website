@@ -36,6 +36,7 @@ export function usePlannerLogic() {
     },
     contacto: {
       nombre: '',
+      cedula: '',
       telefono: '',
       correo: ''
     }

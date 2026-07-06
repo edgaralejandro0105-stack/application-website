@@ -4,15 +4,15 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { SideDecorations } from '../components/SideDecorations';
 import { usePlannerLogic } from '../hooks/usePlannerLogic';
 import { PlannerReserva } from '../components/Planner/PlannerReserva';
-import { PlannerConsulta } from '../components/Planner/PlannerConsulta';
 import { PlannerSuccess } from '../components/Planner/PlannerSuccess';
+import { LoginSection } from './LoginSection';
 
 export function PlannerSection() {
   const plannerLogic = usePlannerLogic();
   const { activeTab, setActiveTab, setConsultaResult, setSearchedConsulta, setErrorConsulta, step, initialDataError, isDataLoading, retryFetchData } = plannerLogic;
 
   return (
-    <section id="planificador" className="py-24 bg-background relative z-10">
+    <section id="planificador" className="py-16 bg-background relative z-10">
       <SideDecorations />
       <style>{`
         .form-glow-wrapper {
@@ -36,18 +36,15 @@ export function PlannerSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12">
           <h2 className="font-playfair text-3xl md:text-4xl font-bold text-white mb-2 uppercase tracking-wide">
-            {activeTab === 'reserva' ? 'Reserva tu Evento' : 'Consulta tu Reserva'}
+            {activeTab === 'reserva' ? 'Reserva tu Evento' : 'Acceso del Cliente'}
           </h2>
           <p className="font-jakarta text-on-surface-variant text-sm">
-            {activeTab === 'reserva' ? 'Cotiza en tiempo real y reserva tu fecha.' : 'Revisa los detalles y el estado actual de tu solicitud.'}
+            {activeTab === 'reserva' ? 'Cotiza en tiempo real y reserva tu fecha.' : 'Inicia sesión para gestionar los detalles de tu evento.'}
             {step !== 3 && activeTab === 'consulta' && (
               <button
                 type="button"
                 onClick={() => {
                   setActiveTab('reserva');
-                  setConsultaResult(null);
-                  setSearchedConsulta(false);
-                  setErrorConsulta(null);
                 }}
                 className="text-primary hover:text-primary-fixed-dim hover:underline ml-2 font-semibold transition-colors cursor-pointer"
               >
@@ -68,26 +65,26 @@ export function PlannerSection() {
             <motion.div
               className="form-light"
               style={{ width: 600, height: 600, background: '#d4af37', left: '-15%', top: '-20%' }}
-              animate={{ 
+              animate={{
                 opacity: [0.05, 0.12, 0.05],
                 y: [0, 30, 0],
                 x: [0, -20, 0]
               }}
               transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
             />
-            
+
             {/* Esfera Violeta Profundo (Contraste) */}
             <motion.div
               className="form-light"
               style={{ width: 500, height: 500, background: '#4c1d95', right: '-10%', bottom: '-15%' }}
-              animate={{ 
+              animate={{
                 opacity: [0.05, 0.15, 0.05],
                 y: [0, -40, 0],
                 x: [0, 30, 0]
               }}
               transition={{ duration: 22, repeat: Infinity, ease: 'linear' }}
             />
-            
+
             <Card className="max-w-4xl mx-auto p-8 border-white/10 bg-surface-container-low/40 overflow-hidden relative z-10">
               <AnimatePresence mode="wait">
                 {initialDataError ? (
@@ -116,7 +113,7 @@ export function PlannerSection() {
                 ) : step === 3 ? (
                   <PlannerSuccess logic={plannerLogic} />
                 ) : activeTab === 'consulta' ? (
-                  <PlannerConsulta logic={plannerLogic} />
+                  <LoginSection />
                 ) : (
                   <PlannerReserva logic={plannerLogic} />
                 )}
