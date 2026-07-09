@@ -1,26 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Loader2, Calendar as CalendarIcon } from 'lucide-react';
-import { getEvents } from '../services/api';
+
+const API_URL = import.meta.env.VITE_API_URL || 'https://api-lacasona.onrender.com/api';
+const BOOKED_STATUSES = ['Pending', 'Confirmed', 'On Hold'];
 
 export function AvailabilityCalendar({ value, onChange, onClose }) {
   const [currentDate, setCurrentDate] = useState(value ? new Date(`${value}T00:00:00`) : new Date());
-  const [events, setEvents] = useState([]);
+  const [bookedDates, setBookedDates] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const response = await getEvents();
-        const data = response.data || response;
-        setEvents(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error('Failed to load events for calendar', err);
-      } finally {
-        setLoading(false);
+  const fetchBookedDates = useCallback(async () => {
+    try {
+      const res = await fetch(`${API_URL}/events`);
+      if (!res.ok) throw new Error('Failed to fetch');
+      const json = await res.json();
+      const list = json.data || json;
+      if (!Array.isArray(list)) {
+        setBookedDates([]);
+        return;
       }
-    };
-    fetchEvents();
+      const dates = list
+        .filter(ev => {
+          if (!ev.start_date) return false;
+          if (ev.status && !BOOKED_STATUSES.includes(ev.status)) return false;
+          return true;
+        })
+        .map(ev => ev.start_date.split('T')[0]);
+      setBookedDates(dates);
+    } catch (err) {
+      console.error('Failed to load booked dates for calendar', err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchBookedDates();
+  }, [fetchBookedDates]);
 
   const nextMonth = (e) => {
     e.preventDefault();
@@ -49,7 +65,6 @@ export function AvailabilityCalendar({ value, onChange, onClose }) {
   const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
   const dayNames = ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"];
 
-  // Create array for days
   const days = [];
   for (let i = 0; i < firstDayOfMonth; i++) {
     days.push(null);
@@ -61,7 +76,7 @@ export function AvailabilityCalendar({ value, onChange, onClose }) {
   const isBooked = (day) => {
     if (!day) return false;
     const dateStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    return events.some(ev => ev.event_date && ev.event_date.startsWith(dateStr));
+    return bookedDates.includes(dateStr);
   };
 
   const isPast = (day) => {

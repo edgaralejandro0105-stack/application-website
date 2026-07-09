@@ -7,7 +7,6 @@ import { ServicesSection } from '../sections/ServicesSection';
 import { GallerySection } from '../sections/GallerySection';
 import { PlannerSection } from '../sections/PlannerSection';
 import { LocationSection } from '../sections/LocationSection';
-import { ReviewsSection } from '../sections/ReviewsSection';
 import { Footer } from '../components/Footer';
 import { FloatingWhatsApp } from '../components/FloatingWhatsApp';
 
@@ -23,7 +22,6 @@ export function LandingPage() {
         <GallerySection />
         <PlannerSection />
         <LocationSection />
-        <ReviewsSection />
       </main>
       <FloatingWhatsApp />
       <Footer />
