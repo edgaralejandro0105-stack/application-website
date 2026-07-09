@@ -21,6 +21,7 @@ export function usePlannerLogic() {
   const [isDataLoading, setIsDataLoading] = useState(true);
   const [initialDataError, setInitialDataError] = useState(false);
 
+  const [reservationResult, setReservationResult] = useState(null);
   const [formData, setFormData] = useState({
     salon: '',
     horario: '20:00-03:00',
@@ -201,14 +202,17 @@ export function usePlannerLogic() {
       setIsSubmitting(true);
       try {
         const apiUrl = import.meta.env.VITE_API_URL || 'https://api-lacasona.onrender.com/api';
+        const payload = { ...formData, precio_estimado: precioEstimado };
         const response = await fetch(`${apiUrl}/events/website`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(payload)
         });
 
         // SOLO si la API responde 200/201 enviamos los correos
         if (response.ok || response.status === 201) {
+          const resData = await response.json();
+          setReservationResult({ message: resData.message, event: resData.data, sale: resData.sale });
           const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
           const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
 
@@ -294,12 +298,13 @@ Costo Estimado: $${precioEstimado} USD`;
     setPrecioEstimado(0);
   };
 
-  return {
+    return {
     step,
     setStep,
     isSubmitting,
     activeTab,
     setActiveTab,
+    reservationResult,
     consultaCorreo,
     setConsultaCorreo,
     consultaResult,

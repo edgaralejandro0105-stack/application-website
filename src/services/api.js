@@ -69,4 +69,69 @@ export const getEmployees = async () => {
   return fetchAPI('/employees');
 };
 
+// ─── Client Portal ─────────────────────────────────────────────────────────────
+
+export const clientPortalLogin = async (email, password) => {
+  const response = await fetch(`${API_URL}/client-portal/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || 'Error al iniciar sesión');
+  }
+  return response.json();
+};
+
+export const getMyInvoices = async (token) => {
+  return fetchAPI('/client-portal/my-invoices', {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+};
+
+export const getMyEvents = async (token) => {
+  return fetchAPI('/client-portal/my-events', {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+};
+
+export const getInvoicePayments = async (saleId, token) => {
+  return fetchAPI(`/client-portal/my-invoices/${saleId}/payments`, {
+    headers: { 'Authorization': `Bearer ${token}` },
+  });
+};
+
+export const updateMilestone = async (eventId, milestoneId, status, token) => {
+  const response = await fetch(`${API_URL}/client-portal/my-events/${eventId}/milestones/${milestoneId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ status }),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || 'Error al actualizar el hito');
+  }
+  return response.json();
+};
+
+export const simulatePayment = async ({ saleId, amount, paymentMethod, token }) => {
+  const response = await fetch(`${API_URL}/client-portal/payments/simulate`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ sale_id: saleId, amount, payment_method: paymentMethod }),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data.message || 'Error al procesar el pago');
+  }
+  return response.json();
+};
+
 
