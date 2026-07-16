@@ -299,19 +299,44 @@ export function ClientPortal() {
                         </div>
                         <h3 className="font-playfair text-2xl font-bold text-white mb-1">Tu {activeEvent.type_event}</h3>
                         <p className="font-jakarta text-on-surface-variant text-sm mb-4">
-                          {activeEvent.start_date ? new Date(activeEvent.start_date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }) : 'Fecha por definir'}
+                          {activeEvent.start_date
+                            ? new Date(activeEvent.start_date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+                            : 'Fecha por definir'}
                         </p>
-                        
+
                         <div className="grid grid-cols-2 gap-x-8 gap-y-4 text-sm font-jakarta text-on-surface-variant">
                           <div><strong className="text-white">Área:</strong> {activeEvent.Venues && activeEvent.Venues.length > 0 ? activeEvent.Venues.map(v => v.name).join(', ') : 'N/A'}</div>
                           <div><strong className="text-white">Invitados:</strong> {activeEvent.guests || 0}</div>
                         </div>
 
                         {showEventDetails && (
-                          <div className="mt-4 pt-4 border-t border-white/5 space-y-2 text-sm font-jakarta text-on-surface-variant">
-                            {activeEvent.description && <p><strong className="text-white">Descripción:</strong> {activeEvent.description}</p>}
-                            {activeEvent.end_date && <p><strong className="text-white">Finaliza:</strong> {new Date(activeEvent.end_date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>}
-                            {activeEvent.dj && <p><strong className="text-white">DJ:</strong> {activeEvent.dj}</p>}
+                          <div className="mt-4 pt-4 border-t border-white/5 space-y-3 text-sm font-jakarta text-on-surface-variant">
+                            {activeEvent.start_date && (
+                              <div className="flex items-center gap-2">
+                                <Clock size={14} className="shrink-0 text-primary" />
+                                <span><strong className="text-white">Inicio:</strong> {new Date(activeEvent.start_date).toLocaleString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                              </div>
+                            )}
+                            {activeEvent.end_date && (
+                              <div className="flex items-center gap-2">
+                                <Clock size={14} className="shrink-0 text-primary" />
+                                <span><strong className="text-white">Finaliza:</strong> {new Date(activeEvent.end_date).toLocaleString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</span>
+                              </div>
+                            )}
+                            {activeEvent.start_date && activeEvent.end_date && (
+                              <p className="text-xs text-primary/80 ml-7">
+                                Duración: {Math.round((new Date(activeEvent.end_date) - new Date(activeEvent.start_date)) / 3600000)}h
+                              </p>
+                            )}
+                            {activeEvent.description && (
+                              <div className="bg-surface-container-low/40 rounded-lg p-3 mt-1 border border-white/5">
+                                <p className="text-xs text-on-surface-variant uppercase tracking-wider font-semibold mb-1">Descripción</p>
+                                <p className="text-white text-sm leading-relaxed">{activeEvent.description}</p>
+                              </div>
+                            )}
+                            {activeEvent.dj && (
+                              <p><strong className="text-white">DJ / Animación:</strong> {activeEvent.dj}</p>
+                            )}
                           </div>
                         )}
                       </div>

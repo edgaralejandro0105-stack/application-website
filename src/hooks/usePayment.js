@@ -4,7 +4,7 @@ export function usePayment() {
   const [processing, setProcessing] = useState(false);
   const [result, setResult] = useState(null);
 
-  const simulatePayment = async (saleId, amount, method, token) => {
+  const simulatePayment = async (saleId, amount, method, token, extra = {}) => {
     setProcessing(true);
     setResult(null);
     try {
@@ -15,7 +15,12 @@ export function usePayment() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ sale_id: saleId, amount, payment_method: method }),
+        body: JSON.stringify({
+          sale_id: saleId,
+          amount,
+          payment_method: method,
+          ...extra,
+        }),
       });
 
       const data = await response.json();

@@ -118,14 +118,14 @@ export const updateMilestone = async (eventId, milestoneId, status, token) => {
   return response.json();
 };
 
-export const simulatePayment = async ({ saleId, amount, paymentMethod, token }) => {
+export const simulatePayment = async ({ saleId, amount, paymentMethod, token, ...extra }) => {
   const response = await fetch(`${API_URL}/client-portal/payments/simulate`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({ sale_id: saleId, amount, payment_method: paymentMethod }),
+    body: JSON.stringify({ sale_id: saleId, amount, payment_method: paymentMethod, ...extra }),
   });
   if (!response.ok) {
     const data = await response.json();

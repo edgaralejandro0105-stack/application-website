@@ -29,6 +29,29 @@
     position: relative;
   }
 
+  /* Scrollbar personalizado */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-track {
+    background: theme('colors.surface-container-low');
+  }
+  ::-webkit-scrollbar-thumb {
+    background: theme('colors.outline-variant');
+    border-radius: 9999px;
+    transition: background 0.2s;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.outline');
+  }
+
+  /* Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.outline-variant') theme('colors.surface-container-low');
+  }
+
   /* Gradientes de fusión para suavizar transiciones entre secciones */
   section[id]::before, section[id]::after {
     content: '';
